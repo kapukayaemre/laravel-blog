@@ -26,9 +26,9 @@ return new class extends Migration
             $table->string("seo_description")->nullable();
             $table->string("seo_keywords")->nullable();
 
-            $table->integer("read_time")->default(0);
-            $table->integer("like_count")->default(0);
             $table->integer("view_count")->default(0);
+            $table->integer("like_count")->default(0);
+            $table->integer("read_time")->default(0);
             $table->dateTime("publish_date");
             $table->timestamps();
 
