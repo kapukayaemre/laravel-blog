@@ -1,10 +1,10 @@
 <{{ $parentElement }} class="{{ $parentClass ?? '' }}">
 <table class="{{ $class ?? '' }}">
     <thead>
-        {!! $columns !!} }
+        {!! $columns !!}
     </thead>
     <tbody>
-        {!! $rows !!} }
+        {!! $rows !!}
     </tbody>
 </table>
 </{{ $parentElement }}>
