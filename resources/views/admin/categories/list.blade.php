@@ -20,12 +20,20 @@
         </x-slot:header>
 
         <x-slot:body>
-            <x-bootstrap.table :class="'table-striped table-hover'">
+            <x-bootstrap.table
+                :class="'table-striped table-hover table-responsive'"
+                :is-responsive="1"
+            >
                 <x-slot:columns>
                     <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Slug</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Feature Status</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Order</th>
+                    <th scope="col">Parent Category</th>
+                    <th scope="col">Actions</th>
                 </x-slot:columns>
 
                 <x-slot:rows>
