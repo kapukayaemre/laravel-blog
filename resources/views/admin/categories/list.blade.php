@@ -63,8 +63,15 @@
                             <td>{{ $category->user->name }}</td>
                             <td>
                                 <div class="d-flex mx-auto">
-                                    <a href="javascript:void(0)" class="btn btn-warning btn-sm"><i class="material-icons ms-0">edit</i> Edit</a>
-                                    <a href="javascript:void(0)" class="btn btn-danger btn-sm"><i class="material-icons ms-0">delete_outline</i> Delete</a>
+                                    <a href="{{ route('category.edit', $category->id) }}" class="btn btn-warning btn-sm"><i class="material-icons ms-0">edit</i> Edit</a>
+                                    <a
+                                        href="javascript:void(0)"
+                                        class="btn btn-danger btn-sm btnDelete"
+                                        data-id="{{ $category->id }}"
+                                        data-name="{{ $category->name }}"
+                                    >
+                                        <i class="material-icons ms-0">delete_outline</i> Delete
+                                    </a>
                                 </div>
                             </td>
 
@@ -134,7 +141,37 @@
                         Swal.fire({
                             icon: "info",
                             title: "Info",
-                            text: "Status is not changed",
+                            text: "Feature Status is not changed",
+                            confirmButtonText: "Okay"
+                        });
+                    }
+                })
+
+            });
+
+            $(".btnDelete").click(function () {
+                let categoryID = $(this).data("id");
+                let categoryName = $(this).data("name");
+                $("#inputStatus").val(categoryID);
+
+                Swal.fire({
+                    icon: "question",
+                    title: 'Do you want to delete the ' + categoryName +'?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Delete',
+                    denyButtonText: `Don't Delete`,
+                }).then((result) => {
+                    if (result.isConfirmed)
+                    {
+                        $("#statusChangeForm").attr("action", "{{ route('category.delete') }}");
+                        $("#statusChangeForm").submit();
+                    }
+                    else if (result.isDenied)
+                    {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Info",
+                            text: "Delete is canceled",
                             confirmButtonText: "Okay"
                         });
                     }

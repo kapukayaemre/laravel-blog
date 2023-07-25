@@ -71,4 +71,40 @@ class CategoryController extends Controller
         return redirect()->back();
 
     }
+
+    public function delete(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'integer', 'exists:categories']
+        ]);
+
+        $category = Category::where("id", $request->id)->first();
+        $category->delete();
+
+        alert()
+            ->success('Success', $category->name." is deleted successfully")
+            ->showConfirmButton('Confirm', '#3085d6')
+            ->autoClose(5000);
+
+        return redirect()->back();
+
+    }
+
+    public function edit(Request $request)
+    {
+        $categoryID = $request->id;
+        $category = Category::where("id", $categoryID)->first();
+
+        if (is_null($category))
+        {
+            alert()
+                ->warning('Warning', "Category Not Found")
+                ->showConfirmButton('Confirm', '#3085d6')
+                ->autoClose(5000);
+
+            return redirect()->route('category.index');
+        }
+
+        return view("admin.articles.create-update", compact("category"));
+    }
 }
