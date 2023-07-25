@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string("name");
             $table->string("slug");
             $table->boolean("status")->default(0);
-            $table->string("feature_status")->default(0);
+            $table->boolean("feature_status")->default(0);
             $table->string("description")->nullable();
             $table->unsignedBigInteger("parent_id")->nullable();
             $table->integer("order")->default(0);
