@@ -15,7 +15,7 @@ class CategoryController extends Controller
          *? ama direk datadaki belli columnları seçmek istersek select(['id','name']) şeklinde kullanmak gerekir.
          */
 
-        $categories = Category::with(["parentCategory:id,name", "user"])->orderBy('order','DESC')->get();
+        $categories = Category::with(["parentCategory:id,name", "user"])->orderBy('order','DESC')->paginate(10)->onEachSide(1);
         return view("admin.categories.list", ['categories' => $categories]);
     }
 

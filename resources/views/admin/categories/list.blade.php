@@ -79,6 +79,7 @@
                     @endforeach
                 </x-slot:rows>
             </x-bootstrap.table>
+            {{ $categories->links() }}
         </x-slot:body>
     </x-bootstrap.card>
     <form action="" method="POST" id="statusChangeForm">
