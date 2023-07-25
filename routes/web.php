@@ -24,3 +24,5 @@ Route::get("articles/create", [ArticleController::class, "create"])->name("artic
 
 Route::get("categories", [CategoryController::class, "index"])->name("category.index");
 Route::get("categories/create", [CategoryController::class, "create"])->name("category.create");
+Route::post("categories/change-status", [CategoryController::class, "changeStatus"])->name("category.changeStatus");
+Route::post("categories/change-feature-status", [CategoryController::class, "changeFeatureStatus"])->name("category.changeFeatureStatus");

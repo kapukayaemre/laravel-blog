@@ -25,7 +25,7 @@
             <li class="{{ Route::is("article.*") ? "open" : "" }}">
                 <a href="#">
                     <i class="material-icons-two-tone">receipt_long</i>
-                    Article Management
+                    Articles
                     <i class="material-icons has-sub-menu">keyboard_arrow_right</i>
                 </a>
                 <ul class="sub-menu" style="">
@@ -41,7 +41,7 @@
             <li class="{{ Route::is("category.*") ? "open" : "" }}">
                 <a href="#">
                     <i class="material-icons-two-tone">category</i>
-                    Category Management
+                    Categories
                     <i class="material-icons has-sub-menu">keyboard_arrow_right</i>
                 </a>
                 <ul class="sub-menu" style="">
