@@ -147,6 +147,15 @@
                             </div>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                        >{{ auth()->user()->name }} <i class="material-icons">logout</i>
+                            <form action="{{ route('logout') }}" method="POST" id="logout-form">
+                                @csrf
+                            </form>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>
