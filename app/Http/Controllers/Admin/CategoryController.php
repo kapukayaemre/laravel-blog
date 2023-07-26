@@ -5,20 +5,50 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         /**
          *? parentCategory:id,name şeklinde ilişkili olan datada istediğimiz columnları getirir
          *? ama direk datadaki belli columnları seçmek istersek select(['id','name']) şeklinde kullanmak gerekir.
          */
 
-        $categories = Category::with(["parentCategory:id,name", "user"])->orderBy('order', 'DESC')->paginate(10)->onEachSide(1);
-        return view("admin.categories.list", ['categories' => $categories]);
+        $parentCategories = Category::all();
+        $users = User::all();
+
+        /** $parentID = $request->parent_id;
+        $userID = $request->user_id; */
+
+        $categories = Category::with(["parentCategory:id,name", "user"])
+            /**
+             *? Scope Kullanımının Alternatifi
+            ->where(function ($query) use ($parentID, $userID) {
+                if (!is_null($parentID))
+                {
+                    $query->where('parent_id', $parentID);
+                }
+                if (!is_null($userID))
+                {
+                    $query->where("user_id", $userID);
+                }
+            })*/
+            ->name($request->name)
+            ->description($request->description)
+            ->slug($request->slug)
+            ->order($request->order)
+            ->status($request->status)
+            ->featureStatus($request->feature_status)
+            ->user($request->user_id)
+            ->parentCategory($request->parent_id)
+            ->orderBy('order', 'DESC')
+            ->paginate(10)
+            ->onEachSide(1);
+        return view("admin.categories.list", ['categories' => $categories, 'parentCategories' => $parentCategories, 'users' => $users]);
     }
 
     public function create()

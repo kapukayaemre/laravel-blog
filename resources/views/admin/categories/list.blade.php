@@ -4,6 +4,8 @@
 @endsection
 
 @section('css')
+    <link rel="stylesheet" href="{{ asset('assets/admin/plugins/select2/css/select2.min.css') }}">
+
     <style>
         .table-hover > tbody > tr:hover {
             --bs-table-hover-bg: transparent;
@@ -20,6 +22,65 @@
         </x-slot:header>
 
         <x-slot:body>
+            <form action="" method="GET">
+                <div class="row">
+                    <div class="col-3 my-1">
+                        <input type="text" class="form-control" placeholder="Search Name" name="name" value="{{ request()->get("name") }}">
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <input type="text" class="form-control" placeholder="Search Slug" name="slug" value="{{ request()->get("slug") }}">
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <input type="text" class="form-control" placeholder="Search Description" name="description" value="{{ request()->get("description") }}">
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <input type="text" class="form-control" placeholder="Search Order" name="order" value="{{ request()->get("order") }}">
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <select class="form-select" name="parent_id">
+                            <option selected value="{{ null }}">Parent Category</option>
+                            @foreach($parentCategories as $parentCategory)
+                                <option value="{{ $parentCategory->id }}" {{ request()->get('parent_id') == $parentCategory->id ? "selected" : "" }}>{{ $parentCategory->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <select class="form-select" name="user_id">
+                            <option selected value="{{ null }}">User</option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->id }}" {{ request()->get('user_id') == $user->id ? "selected" : "" }}>{{ $user->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <select class="form-select" name="status" aria-label="Status">
+                            <option value="{{ null }}">Status</option>
+                            <option value="0" {{ request()->get("status") === "0" ? "selected" : "" }}>Inactive</option>
+                            <option value="1" {{ request()->get("status") === "1" ? "selected" : "" }}>Active</option>
+                        </select>
+                    </div>
+
+                    <div class="col-3 my-1">
+                        <select class="form-select" name="feature_status" aria-label="Feature Status">
+                            <option value="{{ null }}">Feature Status</option>
+                            <option value="0" {{ request()->get("feature_status") === "0" ? "selected" : "" }}>Inactive</option>
+                            <option value="1" {{ request()->get("feature_status") === "1" ? "selected" : "" }}>Active</option>
+                        </select>
+                    </div>
+                    <hr class="mt-2">
+                    <div class="col-6 d-flex mx-auto mb-2 text-center">
+                        <button type="submit" class="btn btn-primary w-50 mx-2">Filter</button>
+                        <button type="submit" class="btn btn-warning w-50">Clear Filter</button>
+                    </div>
+                    <hr>
+                </div>
+            </form>
             <x-bootstrap.table
                 :class="'table-striped table-hover table-responsive'"
                 :is-responsive="1"
@@ -57,7 +118,7 @@
                                     <a href="javascript:void(0)" data-id="{{ $category->id }}" class="btn btn-danger btn-sm btnChangeFeatureStatus">Inactive</a>
                                 @endif
                             </td>
-                            <td>{{ substr($category->description, 0, 20) }}</td>
+                            <td title="{{ $category->description }}">{{ substr($category->description, 0, 20) }}</td>
                             <td>{{ $category->order }}</td>
                             <td>{{ $category->parentCategory?->name }}</td>
                             <td>{{ $category->user->name }}</td>
@@ -79,7 +140,7 @@
                     @endforeach
                 </x-slot:rows>
             </x-bootstrap.table>
-            {{ $categories->links() }}
+            {{ $categories->appends(request()->all())->links() }}
         </x-slot:body>
     </x-bootstrap.card>
     <form action="" method="POST" id="statusChangeForm">
@@ -89,6 +150,8 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('assets/admin/plugins/select2/js/select2.full.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/pages/select2.js') }}"></script>
     <script>
         $(document).ready(function ()
         {
@@ -179,6 +242,8 @@
                 })
 
             });
+
+
         });
     </script>
 @endsection

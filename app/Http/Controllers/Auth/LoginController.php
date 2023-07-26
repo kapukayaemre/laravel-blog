@@ -40,6 +40,7 @@ class LoginController extends Controller
 
     }
 
+    /*? Login Alternative */
     public function login2(LoginRequest $request)
     {
         $email = $request->email;
@@ -60,6 +61,7 @@ class LoginController extends Controller
         }
     }
 
+    /*? Login Alternative */
     public function login3(LoginRequest $request)
     {
         $email = $request->email;
