@@ -124,9 +124,9 @@
                             <td>{{ $article->slug }}</td>
                             <td>
                                 @if($article->status)
-                                    <a href="javascript:void(0)" class="btn btn-success btn-sm btnChangeStatus" data-id="{{ $article->id }}">Aktif</a>
+                                    <a href="javascript:void(0)" class="btn btn-success btn-sm btnChangeStatus" data-id="{{ $article->id }}">Active</a>
                                 @else
-                                    <a href="javascript:void(0)" class="btn btn-danger btn-sm btnChangeStatus" data-id="{{ $article->id }}">Pasif</a>
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-sm btnChangeStatus" data-id="{{ $article->id }}">Inactive</a>
                                 @endif
                             </td>
                             <td>
@@ -161,14 +161,13 @@
             </div>
         </x-slot:body>
     </x-bootstrap.card>
-
 @endsection
 
 @section("js")
-    <script src="{{ asset("assets/plugins/select2/js/select2.full.min.js") }}"></script>
-    <script src="{{ asset("assets/js/pages/select2.js") }}"></script>
-    <script src="{{ asset("assets/plugins/flatpickr/flatpickr.js") }}"></script>
-    <script src="{{ asset("assets/js/pages/datepickers.js") }}"></script>
+    <script src="{{ asset("assets/admin/plugins/select2/js/select2.full.min.js") }}"></script>
+    <script src="{{ asset("assets/admin/js/pages/select2.js") }}"></script>
+    <script src="{{ asset("assets/admin/plugins/flatpickr/flatpickr.js") }}"></script>
+    <script src="{{ asset("assets/admin/js/pages/datepickers.js") }}"></script>
     <script src="{{ asset("assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
     <script src="{{ asset("assets/admin/plugins/bootstrap/js/popper.min.js") }}"></script>
     <script>
@@ -180,11 +179,11 @@
                 let self = $(this);
 
                 Swal.fire({
-                    title: 'Status değiştirmek istediğinize emin misiniz?',
+                    icon: "question",
+                    title: 'Do you want to change the status?',
                     showDenyButton: true,
-                    showCancelButton: true,
-                    confirmButtonText: 'Evet',
-                    denyButtonText: `Hayır`,
+                    confirmButtonText: 'Change',
+                    denyButtonText: `Don't Change`,
                     cancelButtonText: "İptal"
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
@@ -202,20 +201,20 @@
                                 {
                                     self.removeClass("btn-danger");
                                     self.addClass("btn-success");
-                                    self.text("Aktif");
+                                    self.text("Active");
                                 }
                                 else
                                 {
                                     self.removeClass("btn-success");
                                     self.addClass("btn-danger");
-                                    self.text("Pasif");
+                                    self.text("Inactive");
                                 }
 
                                 Swal.fire({
-                                    title: "Başarılı",
-                                    text: "Status Güncellendi",
-                                    confirmButtonText: 'Tamam',
-                                    icon: "success"
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Status Updated Successfully",
+                                    confirmButtonText: 'Okay',
                                 });
 
                             },
@@ -227,24 +226,22 @@
                     else if (result.isDenied)
                     {
                         Swal.fire({
-                            title: "Bilgi",
-                            text: "Herhangi bir işlem yapılmadı",
-                            confirmButtonText: 'Tamam',
-                            icon: "info"
+                            icon: "info",
+                            title: "Info",
+                            text: "Nothing Changed",
+                            confirmButtonText: 'Okay',
                         });
                     }
                 })
-
             });
 
             $('.btnDelete').click(function () {
                 let articleID = $(this).data('id');
-                let categoryName = $(this).data('name');
+                let articleName = $(this).data('name');
 
                 Swal.fire({
-                    title: categoryName + ' i Silmek istediğinize emin misiniz?',
+                    title: "Do you want to delete this " + articleName + "?",
                     showDenyButton: true,
-                    showCancelButton: true,
                     confirmButtonText: 'Evet',
                     denyButtonText: `Hayır`,
                     cancelButtonText: "İptal"
@@ -263,24 +260,24 @@
                                 $('#row-' + articleID).remove();
 
                                 Swal.fire({
-                                    title: "Başarılı",
-                                    text: "Makale Silindi",
-                                    confirmButtonText: 'Tamam',
-                                    icon: "success"
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Article Deleted Successfully",
+                                    confirmButtonText: 'Okay'
                                 });
                             },
                             error: function (){
-                                console.log("hata geldi");
+                                console.log("error comes");
                             }
                         })
                     }
                     else if (result.isDenied)
                     {
                         Swal.fire({
-                            title: "Bilgi",
-                            text: "Herhangi bir işlem yapılmadı",
-                            confirmButtonText: 'Tamam',
-                            icon: "info"
+                            icon: "info",
+                            title: "Info",
+                            text: "Nothing Changed",
+                            confirmButtonText: 'Okay'
                         });
                     }
                 })
