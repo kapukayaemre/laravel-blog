@@ -22,7 +22,7 @@
                             <div class="alert alert-style-light alert-danger">{{ $error }}</div>
                         @endforeach
                     @endif
-                    <form action="{{ isset($article) ? route('article.edit', $article->id) : route('article.create') }}" method="POST">
+                    <form action="{{ isset($article) ? route('article.edit', $article->id) : route('article.create') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <label for="title" class="form-label">Article Title</label>
                         <input
@@ -43,10 +43,7 @@
                         ? @endif
                         ? --}}
 
-                        <label for="summernote" class="form-label">Article Body</label>
-                        <div id="summernote"></div>
-
-                        <label for="slug" class="form-label m-t-sm">Article Slug</label>
+                        <label for="slug" class="form-label">Article Slug</label>
                         <input
                             type="text"
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('slug')) border-danger @endif"
@@ -56,7 +53,10 @@
                             value="{{ isset($article) ? $article->slug : "" }}"
                         >
 
-                        <label for="tags" class="form-label">Article Tags</label>
+                        <label for="summernote" class="form-label">Article Body</label>
+                        <textarea name="body" id="summernote" class="m-b-sm">Hello Summernote</textarea>
+
+                        <label for="tags" class="form-label m-t-sm">Article Tags</label>
                         <input
                             type="text"
                             class="form-control form-control-solid-bordered @if($errors->has('tags')) border-danger @endif"
@@ -119,6 +119,11 @@
                         <label for="image" class="form-label">Article Image</label>
                         <input type="file" name="image" id="image" class="form-control" accept="image/png, image/jpeg, image/jpg">
                         <div class="form-text m-b-sm">Article image must be max 2MB</div>
+
+                        @if(isset($article) && $article->image)
+                            <label for="image-preview" class="form-label">Article Image Preview</label>
+                            <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="img-fluid" id="image-preview" style="max-height: 200px">
+                        @endif
 
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="status" value="1" id="status" {{ isset($article) && $article->status ? "checked" : "" }}>
