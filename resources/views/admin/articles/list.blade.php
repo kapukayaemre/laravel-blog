@@ -242,9 +242,8 @@
                 Swal.fire({
                     title: "Do you want to delete this " + articleName + "?",
                     showDenyButton: true,
-                    confirmButtonText: 'Evet',
-                    denyButtonText: `Hayır`,
-                    cancelButtonText: "İptal"
+                    confirmButtonText: 'Yes',
+                    denyButtonText: `No`
                 }).then((result) => {
                     if (result.isConfirmed)
                     {

@@ -22,7 +22,7 @@
         </x-slot:header>
 
         <x-slot:body>
-            <form action="" method="GET">
+            <form action="" id="formFilter">
                 <div class="row">
                     <div class="col-3 my-1">
                         <input type="text" class="form-control" placeholder="Search Name" name="name" value="{{ request()->get("name") }}">
@@ -41,8 +41,8 @@
                     </div>
 
                     <div class="col-3 my-1">
-                        <select class="form-select" name="parent_id">
-                            <option selected value="{{ null }}">Parent Category</option>
+                        <select class="js-states form-select" tabindex="-1" id="selectParentCategory" name="parent_id" style="display: none; width: 100%">
+                            <option value="{{ null }}">Parent Category</option>
                             @foreach($parentCategories as $parentCategory)
                                 <option value="{{ $parentCategory->id }}" {{ request()->get('parent_id') == $parentCategory->id ? "selected" : "" }}>{{ $parentCategory->name }}</option>
                             @endforeach
@@ -51,7 +51,7 @@
 
                     <div class="col-3 my-1">
                         <select class="form-select" name="user_id">
-                            <option selected value="{{ null }}">User</option>
+                            <option value="{{ null }}">User</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}" {{ request()->get('user_id') == $user->id ? "selected" : "" }}>{{ $user->name }}</option>
                             @endforeach
@@ -73,7 +73,9 @@
                             <option value="1" {{ request()->get("feature_status") === "1" ? "selected" : "" }}>Active</option>
                         </select>
                     </div>
+
                     <hr class="mt-2">
+
                     <div class="col-6 d-flex mx-auto mb-2 text-center">
                         <button type="submit" class="btn btn-primary w-50 mx-2">Filter</button>
                         <button type="submit" class="btn btn-warning w-50">Clear Filter</button>
@@ -125,12 +127,10 @@
                             <td>
                                 <div class="d-flex mx-auto">
                                     <a href="{{ route('category.edit', $category->id) }}" class="btn btn-warning btn-sm"><i class="material-icons ms-0">edit</i> Edit</a>
-                                    <a
-                                        href="javascript:void(0)"
+                                    <a href="javascript:void(0)"
                                         class="btn btn-danger btn-sm btnDelete"
                                         data-id="{{ $category->id }}"
-                                        data-name="{{ $category->name }}"
-                                    >
+                                        data-name="{{ $category->name }}">
                                         <i class="material-icons ms-0">delete_outline</i> Delete
                                     </a>
                                 </div>
@@ -243,6 +243,7 @@
 
             });
 
+            $('#selectParentCategory').select2();
 
         });
     </script>

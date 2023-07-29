@@ -70,8 +70,31 @@ class CategoryController extends Controller
             $category->feature_status  = $request->feature_status ? 1 : 0;
             $category->seo_keywords    = $request->seo_keywords;
             $category->seo_description = $request->seo_description;
-            $category->user_id         = random_int(1, 10);
+            $category->user_id         = auth()->id();
             $category->order           = $request->order;
+
+            if ($request->has("image"))
+            {
+                $imageFile = $request->file("image");
+                $originalName = $imageFile->getClientOriginalName();
+                $originalExtension = $imageFile->getClientOriginalExtension();
+                $explodeName = explode(".", $originalName)[0];
+                $fileName = Str::slug($explodeName). ".". $originalExtension;
+
+                $folder = "categories";
+                $publicPath = "storage/".$folder;
+
+                if (file_exists(public_path($publicPath. $fileName)))
+                {
+                    return redirect()->back()->withErrors([
+                        'image' => 'Same picture already uploaded'
+                    ]);
+                }
+
+                $category->image = $publicPath. "/" .$fileName;
+                $imageFile->storeAs($folder, $fileName, "public");
+            }
+
             $category->save();
         } catch (\Exception $exception) {
             abort(404, $exception->getMessage());
@@ -202,6 +225,34 @@ class CategoryController extends Controller
             $category->seo_description = $request->seo_description;
             // $category->user_id         = random_int(1, 10);
             $category->order = $request->order;
+
+            if ($request->has("image"))
+            {
+                $imageFile = $request->file("image");
+                $originalName = $imageFile->getClientOriginalName();
+                $originalExtension = $imageFile->getClientOriginalExtension();
+                $explodeName = explode(".", $originalName)[0];
+                $fileName = Str::slug($explodeName). ".". $originalExtension;
+
+                $folder = "categories";
+                $publicPath = "storage/".$folder;
+
+                if (file_exists(public_path($publicPath. $fileName)))
+                {
+                    return redirect()->back()->withErrors([
+                        'image' => 'Same picture already uploaded'
+                    ]);
+                }
+
+                if (file_exists(public_path($category->image)))
+                {
+                    \File::delete(public_path($category->image));
+                }
+
+                $category->image = $publicPath. "/" .$fileName;
+                $imageFile->storeAs($folder, $fileName, "public");
+            }
+
             $category->save();
         } catch (\Exception $exception) {
             abort(400, $exception->getMessage());

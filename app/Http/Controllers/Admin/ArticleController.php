@@ -49,7 +49,7 @@ class ArticleController extends Controller
                     $query->where('like_count', "<=", (int)$request->max_like_count);
                 }
             })
-            ->paginate(5);
+            ->paginate(10);
 
         return view("admin.articles.list", compact("users", "categories", "articles"));
     }
@@ -62,20 +62,23 @@ class ArticleController extends Controller
 
     public function store(ArticleCreateRequest $request)
     {
-        $imageFile = $request->file("image");
-        $originalName = $imageFile->getClientOriginalName();
-        $originalExtension = $imageFile->getClientOriginalExtension();
-        $explodeName = explode(".", $originalName)[0];
-        $fileName = Str::slug($explodeName). ".". $originalExtension;
-
-        $folder = "articles";
-        $publicPath = "storage/".$folder;
-
-        if (file_exists(public_path($publicPath. $fileName)))
+        if ($request->has("image"))
         {
-            return redirect()->back()->withErrors([
-               'image' => 'Same picture already uploaded'
-            ]);
+            $imageFile = $request->file("image");
+            $originalName = $imageFile->getClientOriginalName();
+            $originalExtension = $imageFile->getClientOriginalExtension();
+            $explodeName = explode(".", $originalName)[0];
+            $fileName = Str::slug($explodeName). ".". $originalExtension;
+
+            $folder = "articles";
+            $publicPath = "storage/".$folder;
+
+            if (file_exists(public_path($publicPath. $fileName)))
+            {
+                return redirect()->back()->withErrors([
+                    'image' => 'Same picture already uploaded'
+                ]);
+            }
         }
 
         $data = $request->except("_token");
@@ -101,13 +104,19 @@ class ArticleController extends Controller
         }
 
         $data["slug"] = $slug;
-        $data["image"] = $publicPath."/".$fileName;
+
+        if (!is_null($request->image))
+        {
+            $data["image"] = $publicPath."/".$fileName;
+        }
+
         $data["user_id"] = auth()->id();
 
         Article::create($data);
-
-        // $imageFile->store("articles", "public");
-        $imageFile->storeAs($folder, $fileName, "public");
+        if ($request->has("image"))
+        {
+            $imageFile->storeAs($folder, $fileName, "public");
+        }
 
         alert()
             ->success("Success", "Article Created Successfully")

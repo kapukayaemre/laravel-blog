@@ -20,7 +20,7 @@
                             <div class="alert alert-style-light alert-danger">{{ $error }}</div>
                         @endforeach
                     @endif
-                    <form action="{{ isset($category) ? route('category.edit', $category->id) : route('category.create') }}" method="POST">
+                    <form action="{{ isset($category) ? route('category.edit', $category->id) : route('category.create') }}" method="POST" enctype="multipart/form-data" id="categoryForm">
                         @csrf
                         <label for="name" class="form-label">Category Name</label>
                         <input
@@ -31,7 +31,6 @@
                             name="name"
                             id="name"
                             value="{{ isset($category) ? $category->name : "" }}"
-                            required
                         >
                         {{--?
                         ? @if($errors->has("name"))
@@ -104,6 +103,15 @@
                             style="resize: none"
                         >{{ isset($category) ? $category->seo_description : "" }}</textarea>
 
+                        <label for="image" class="form-label">Category Image</label>
+                        <input type="file" name="image" id="image" class="form-control" accept="image/png, image/jpeg, image/jpg">
+                        <div class="form-text m-b-sm">Category image must be max 2MB</div>
+
+                        @if(isset($category) && $category->image)
+                            <label for="image-preview" class="form-label">Article Image Preview</label><br>
+                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="img-fluid m-b-sm" id="image-preview" style="max-height: 200px">
+                        @endif
+
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="status" value="1" id="status" {{ isset($category) && $category->status ? "checked" : "" }}>
                             <label class="form-check-label" for="status">
@@ -121,7 +129,7 @@
                         <hr>
 
                         <div class="col-6 mx-auto mt-4 text-center">
-                            <button type="submit" class="btn btn-success btn-style-light w-50">{{ isset($category) ? "Update" : "Save" }}</button>
+                            <button type="button" class="btn btn-success btn-style-light w-50" id="btnSave">{{ isset($category) ? "Update" : "Save" }}</button>
                         </div>
                     </form>
                 </div>
@@ -131,4 +139,25 @@
 @endsection
 
 @section('js')
+    <script>
+        let name = $("#name");
+
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                if(name.val().trim() === "" || name.val().trim() == null)
+                {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "Name field cannot be empty",
+                        confirmButtonText: "Okay"
+                    })
+                }
+                else
+                {
+                    $("#categoryForm").submit();
+                }
+            })
+        });
+    </script>
 @endsection

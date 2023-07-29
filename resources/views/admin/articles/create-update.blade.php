@@ -22,7 +22,7 @@
                             <div class="alert alert-style-light alert-danger">{{ $error }}</div>
                         @endforeach
                     @endif
-                    <form action="{{ isset($article) ? route('article.edit', $article->id) : route('article.create') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ isset($article) ? route('article.edit', $article->id) : route('article.create') }}" method="POST" enctype="multipart/form-data" id="articleForm">
                         @csrf
                         <label for="title" class="form-label">Article Title</label>
                         <input
@@ -136,7 +136,7 @@
                         <hr>
 
                         <div class="col-6 mx-auto mt-4 text-center">
-                            <button type="submit" class="btn btn-success btn-style-light w-50">{{ isset($article) ? "Update" : "Save" }}</button>
+                            <button type="button" class="btn btn-success btn-style-light w-50" id="btnSave">{{ isset($article) ? "Update" : "Save" }}</button>
                         </div>
                     </form>
                 </div>
@@ -154,6 +154,58 @@
         $("#publish_date").flatpickr({
             enableTime: true,
             dateFormat: "Y-m-d H:i",
+        });
+    </script>
+
+    <script>
+        let title = $("#title");
+        let body = $("#summernote");
+        let tags = $("#tags");
+        let category_id = $("#category_id");
+
+        $(document).ready(function () {
+            $("#btnSave").click(function () {
+                if(title.val().trim() === "" || title.val().trim() == null)
+                {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "Title field cannot be empty",
+                        confirmButtonText: "Okay"
+                    })
+                }
+                else if(body.val().trim() === "" || body.val().trim() == null)
+                {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "Body field cannot be empty",
+                        confirmButtonText: "Okay"
+                    })
+                }
+                else if(tags.val().trim().length < 3)
+                {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "Tags must be greater than 3",
+                        confirmButtonText: "Okay"
+                    })
+                }
+                else if(category_id.val() == null || category_id.val() === "")
+                {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "Choose a category",
+                        confirmButtonText: 'Okay'
+                    });
+                }
+                else
+                {
+                    $("#articleForm").submit();
+                }
+            })
         });
     </script>
 @endsection
