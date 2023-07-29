@@ -26,6 +26,9 @@ Route::prefix("admin")->middleware('auth')->group(function () {
     Route::post("articles/create", [ArticleController::class, "store"]);
     Route::get("articles/{id}/edit", [ArticleController::class, "edit"])->name("article.edit");
     Route::post("articles/{id}/edit", [ArticleController::class, "update"]);
+    Route::post("articles/change-status", [ArticleController::class, "changeStatus"])->name("article.changeStatus");
+    Route::post("articles/delete", [ArticleController::class, "delete"])->name("article.delete");
+
 
     Route::get("categories", [CategoryController::class, "index"])->name("category.index");
     Route::get("categories/create", [CategoryController::class, "create"])->name("category.create");

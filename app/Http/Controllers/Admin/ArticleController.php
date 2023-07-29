@@ -14,9 +14,25 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view("admin.articles.list");
+        $users = User::all();
+        $categories = Category::all();
+
+        $articles = Article::query()
+            ->with(["category", "user"])
+            ->where(function ($query) use ($request) {
+                $query->orWhere("title", "LIKE", "%". $request->search_text ."%")
+                      ->orWhere("slug", "LIKE", "%". $request->search_text ."%")
+                      ->orWhere("body", "LIKE", "%". $request->search_text ."%")
+                      ->orWhere("tags", "LIKE", "%". $request->search_text ."%");
+            })
+            ->status($request->status)
+            ->category($request->category_id)
+            ->user($request->user_id)
+            ->paginate(5);
+
+        return view("admin.articles.list", compact("users", "categories", "articles"));
     }
 
     public function create()
