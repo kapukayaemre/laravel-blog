@@ -114,6 +114,7 @@
                             id="publish_date"
                             name="publish_date"
                             placeholder="Select Publish Date"
+                            value="{{ isset($article) ? $article->publish_date : "" }}"
                         >
 
                         <label for="image" class="form-label">Article Image</label>
@@ -121,8 +122,8 @@
                         <div class="form-text m-b-sm">Article image must be max 2MB</div>
 
                         @if(isset($article) && $article->image)
-                            <label for="image-preview" class="form-label">Article Image Preview</label>
-                            <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="img-fluid" id="image-preview" style="max-height: 200px">
+                            <label for="image-preview" class="form-label">Article Image Preview</label><br>
+                            <img src="{{ asset($article->image) }}" alt="{{ $article->title }}" class="img-fluid m-b-sm" id="image-preview" style="max-height: 200px">
                         @endif
 
                         <div class="form-check">
