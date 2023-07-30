@@ -156,9 +156,7 @@
                     @endforeach
                 </x-slot:rows>
             </x-bootstrap.table>
-            <div class="d-flex justify-content-center">
-                {{ $articles->appends(request()->all())->onEachside(2)->links() }}
-            </div>
+            {{ $articles->appends(request()->all())->onEachside(2)->links() }}
         </x-slot:body>
     </x-bootstrap.card>
 @endsection
