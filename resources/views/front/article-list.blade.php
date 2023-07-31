@@ -14,7 +14,7 @@
 
         @foreach($articles as $item)
             <div class="col-md-4 mt-4">
-                <a href="{{ route("front.articleDetail", ["username" => $item->user->username, "slug" => $item->slug]) }}">
+                <a href="{{ route("front.articleDetail", ["user" => $item->user->username, "article" => $item->slug]) }}">
                     <img src="{{ asset($item->image) }}" class="img-fluid">
                 </a>
                 <div class="most-popular-body mt-2">

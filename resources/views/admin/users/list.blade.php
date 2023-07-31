@@ -5,6 +5,7 @@
 @section("css")
     <link rel="stylesheet" href="{{ asset("assets/admin/plugins/flatpickr/flatpickr.min.css") }}">
     <link rel="stylesheet" href="{{ asset("assets/admin/plugins/select2/css/select2.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/front/aos/aos.css") }}">
 
     <style>
         .table-hover > tbody > tr:hover {
@@ -70,7 +71,7 @@
                 <x-slot:rows>
                     @foreach($users as $user)
                         <tr id="row-{{ $user->id }}">
-                            <td>
+                            <td data-aos="flip-right">
                                 @if(!empty($user->image))
                                     <img src="{{ asset($user->image) }}" height="60">
                                 @endif
@@ -87,14 +88,23 @@
                             </td>
                             <td>
                                 <div class="d-flex">
-                                    <a href="{{ route("user.edit",["id" => $user->id]) }}"
-                                       class="btn btn-warning btn-sm"><i class="material-icons ms-0">edit</i></a>
+                                    <a href="{{ route("user.edit", $user->username) }}"
+                                       class="btn btn-warning btn-sm"><i class="material-icons ms-0">edit</i>Edit</a>
                                     <a href="javascript:void(0)"
                                        class="btn btn-danger btn-sm btnDelete"
-                                       data-name="{{ $user->title }}"
+                                       data-name="{{ $user->name }}"
                                        data-id="{{ $user->id }}">
                                         <i class="material-icons ms-0">delete</i>
+                                        Delete
                                     </a>
+                                    @if($user->deleted_at)
+                                        <a href="javascript:void(0)"
+                                           class="btn btn-info btn-sm btnRestore"
+                                           data-name="{{ $user->name }}"
+                                           data-id="{{ $user->id }}">
+                                            <i class="material-icons ms-0">restore</i>
+                                        </a>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -113,12 +123,14 @@
     <script src="{{ asset("assets/admin/js/pages/datepickers.js") }}"></script>
     <script src="{{ asset("assets/admin/plugins/bootstrap/js/bootstrap.bundle.min.js") }}"></script>
     <script src="{{ asset("assets/admin/plugins/bootstrap/js/popper.min.js") }}"></script>
+    <script src="{{ asset("assets/front/aos/aos.js") }}"></script>
     <script>
         $(document).ready(function ()
         {
+            AOS.init();
 
             $('.btnChangeStatus').click(function () {
-                let articleID = $(this).data('id');
+                let userID = $(this).data('id');
                 let self = $(this);
 
                 Swal.fire({
@@ -126,8 +138,7 @@
                     title: 'Do you want to change the status?',
                     showDenyButton: true,
                     confirmButtonText: 'Change',
-                    denyButtonText: `Don't Change`,
-                    cancelButtonText: "İptal"
+                    denyButtonText: `Don't Change`
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed)
@@ -136,11 +147,11 @@
                             method: "POST",
                             url: "{{ route("user.changeStatus") }}",
                             data: {
-                                articleID : articleID
+                                userID : userID
                             },
                             async: false,
                             success: function (data){
-                                if(data.article_status)
+                                if(data.user_status)
                                 {
                                     self.removeClass("btn-danger");
                                     self.addClass("btn-success");
@@ -179,11 +190,11 @@
             });
 
             $('.btnDelete').click(function () {
-                let articleID = $(this).data('id');
-                let articleName = $(this).data('name');
+                let userID = $(this).data('id');
+                let userName = $(this).data('name');
 
                 Swal.fire({
-                    title: "Do you want to delete this " + articleName + "?",
+                    title: "Do you want to delete this " + userName + "?",
                     showDenyButton: true,
                     confirmButtonText: 'Yes',
                     denyButtonText: `No`
@@ -195,16 +206,63 @@
                             url: "{{ route("user.delete") }}",
                             data: {
                                 "_method": "DELETE",
-                                articleID : articleID
+                                userID : userID
                             },
                             async: false,
                             success: function (data){
-                                $('#row-' + articleID).remove();
+                                $('#row-' + userID).remove();
 
                                 Swal.fire({
                                     icon: "success",
                                     title: "Success",
-                                    text: "Article Deleted Successfully",
+                                    text: "User Deleted Successfully",
+                                    confirmButtonText: 'Okay'
+                                });
+                            },
+                            error: function (){
+                                console.log("error comes");
+                            }
+                        })
+                    }
+                    else if (result.isDenied)
+                    {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Info",
+                            text: "Nothing Changed",
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                })
+
+            });
+
+            $('.btnRestore').click(function () {
+                let userID = $(this).data('id');
+                let userName = $(this).data('name');
+                let self = $(this);
+
+                Swal.fire({
+                    title: "Do you want to restore this " + userName + "?",
+                    showDenyButton: true,
+                    confirmButtonText: 'Yes',
+                    denyButtonText: `No`
+                }).then((result) => {
+                    if (result.isConfirmed)
+                    {
+                        $.ajax({
+                            method: "POST",
+                            url: "{{ route("user.restore") }}",
+                            data: {
+                                userID : userID
+                            },
+                            async: false,
+                            success: function (data){
+                                self.remove();
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "User Restored Successfully",
                                     confirmButtonText: 'Okay'
                                 });
                             },

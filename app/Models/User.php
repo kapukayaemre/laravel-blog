@@ -4,13 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -45,4 +46,23 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function scopeStatus($query, $status)
+    {
+        if (!is_null($status))
+            return $query->where("status", $status);
+    }
+
+    public function scopeSearchText($query, $search_text)
+    {
+        if (!is_null($search_text))
+        {
+            return $query->where(function ($q) use ($search_text)
+            {
+                $q->where("name", "LIKE", "%". $search_text ."%")
+                    ->orWhere("username", "LIKE", "%". $search_text ."%")
+                    ->orWhere("email", "LIKE", "%". $search_text ."%");
+            });
+        }
+    }
 }

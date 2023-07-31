@@ -22,7 +22,7 @@
                             <div class="alert alert-style-light alert-danger">{{ $error }}</div>
                         @endforeach
                     @endif
-                    <form action="{{ isset($user) ? route('user.edit', $user->id) : route('user.create') }}" method="POST" enctype="multipart/form-data" id="userForm">
+                    <form action="{{ isset($user) ? route('user.edit', $user->username) : route('user.create') }}" method="POST" enctype="multipart/form-data" id="userForm">
                         @csrf
                         <label for="username" class="form-label">Username</label>
                         <input

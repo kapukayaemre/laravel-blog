@@ -51,9 +51,10 @@ Route::prefix("admin")->middleware('auth')->group(function () {
     Route::get("users/create", [UserController::class, "create"])->name("user.create");
     Route::post("users/create", [UserController::class, "store"]);
     Route::post("users/change-status", [UserController::class, "changeStatus"])->name("user.changeStatus");
-    Route::get("users/{id:users}/edit", [UserController::class, "edit"])->name("user.edit")->whereNumber('id');
-    Route::post("users/{id:users}/edit", [UserController::class, "update"])->whereNumber('id');
-    Route::post("users/delete", [UserController::class, "delete"])->name("user.delete");
+    Route::get("users/{user:username}/edit", [UserController::class, "edit"])->name("user.edit")->whereNumber('id');
+    Route::post("users/{user:username}/edit", [UserController::class, "update"])->whereNumber('id');
+    Route::delete("users/delete", [UserController::class, "delete"])->name("user.delete");
+    Route::post("users/restore", [UserController::class, "restore"])->name("user.restore");
 
 
 });
@@ -63,8 +64,8 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']
 });
 
 Route::get('/', [FrontController::class, "home"])->name('home');
-Route::get('/categories/{slug:categories}', [FrontController::class, "category"])->name('front.category');
-Route::get('/{username:users}/{slug:articles}', [FrontController::class, "articleDetail"])->name('front.articleDetail');
+Route::get('/categories/{category:slug}', [FrontController::class, "category"])->name('front.category');
+Route::get('/{user:username}/{article:slug}', [FrontController::class, "articleDetail"])->name('front.articleDetail');
 
 Route::get("/login", [LoginController::class, "showLogin"])->name("login");
 Route::post("/login", [LoginController::class, "login"]);
