@@ -15,6 +15,7 @@ class SettingsSeeder extends Seeder
     {
         Settings::create([
             "logo"                         => "",
+            "telegram_link"                => "",
             "header_text"                  => "lorem",
             "footer_text"                  => "lorem",
             "feature_categories_is_active" => 1,

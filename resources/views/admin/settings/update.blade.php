@@ -26,7 +26,6 @@
                         <label for="header_text" class="form-label">Header Text</label>
                         <textarea
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('header_text')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Header Text"
                             name="header_text"
                             id="header_text"
@@ -36,12 +35,21 @@
                         <label for="footer_text" class="form-label mt-3">Footer Text</label>
                         <textarea
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('footer_text')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Footer Text"
                             name="footer_text"
                             id="footer_text"
                             rows="5"
                         >{!! isset($settings) ? $settings->footer_text : "" !!}</textarea>
+
+                        <label for="telegram_link" class="form-label mt-3">Telegram Link</label>
+                        <input
+                            type="text"
+                            class="form-control form-control-solid-bordered m-b-sm @if($errors->has('telegram_link')) border-danger @endif"
+                            placeholder="Telegram Link"
+                            name="telegram_link"
+                            id="telegram_link"
+                            value="{{ isset($settings) ? $settings->telegram_link : "" }}"
+                        >
 
 
                         <label for="logo" class="form-label">Logo</label>
