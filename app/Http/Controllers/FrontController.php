@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\Settings;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class FrontController extends Controller
@@ -27,11 +28,20 @@ class FrontController extends Controller
          * */
 
         $articles = Article::query()
-            ->with(["category:id,name","user:id,name"])
+            ->with(["category:id,name", "user:id,name,username"])
             ->whereHas("category", function ($query) use ($slug) {
                 $query->where("slug", $slug);
-            })->paginate(1);
+            })->paginate(12);
 
         return view("front.article-list", compact("settings", "categories", "category", "articles"));
+    }
+
+    public function articleDetail(Request $request, string $username, string $articleSlug)
+    {
+        $settings = Settings::first();
+        $categories = Category::query()->where("status", 1)->get();
+        $article = Article::query()->with("user")->where("slug",$articleSlug)->first();
+
+        return view("front.article-detail", compact("settings","categories","article"));
     }
 }

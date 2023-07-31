@@ -1,4 +1,6 @@
 AOS.init();
+hljs.highlightAll();
+
 $('#searchIcon2').click(function () {
     $("#searchForm").hide();
     $('#searchIcon1').show();

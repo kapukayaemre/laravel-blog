@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="{{ asset("assets/front/swiper/swiper-bundle.min.css") }}">
 
     <link rel="stylesheet" href="{{ asset("assets/front/aos/aos.css") }}">
+    <link rel="stylesheet" href="{{ asset("assets/front/css/highlighter-default.min.css") }}">
 
     <link rel="stylesheet" href="{{ asset("assets/front/css/style.css") }}">
 
@@ -218,6 +219,7 @@
 <script src="{{ asset("assets/front/swiper/swiper-bundle.min.js") }}"></script>
 <script src="{{ asset("assets/front/aos/aos.js") }}"></script>
 
+<script src="{{ asset("assets/front/js/highlight.min.js") }}"></script>
 <script src="{{ asset("assets/front/js/main.js") }}"></script>
 @yield("js")
 </body>
