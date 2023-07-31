@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FrontController;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +45,16 @@ Route::prefix("admin")->middleware('auth')->group(function () {
 
     Route::get("settings", [SettingsController::class, "show"])->name("settings");
     Route::post("settings", [SettingsController::class, "update"]);
+
+
+    Route::get("users", [UserController::class, "index"])->name("user.index");
+    Route::get("users/create", [UserController::class, "create"])->name("user.create");
+    Route::post("users/create", [UserController::class, "store"]);
+    Route::post("users/change-status", [UserController::class, "changeStatus"])->name("user.changeStatus");
+    Route::get("users/{id:users}/edit", [UserController::class, "edit"])->name("user.edit")->whereNumber('id');
+    Route::post("users/{id:users}/edit", [UserController::class, "update"])->whereNumber('id');
+    Route::post("users/delete", [UserController::class, "delete"])->name("user.delete");
+
 
 });
 
