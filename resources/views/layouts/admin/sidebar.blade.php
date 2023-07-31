@@ -15,8 +15,8 @@
                 Apps
             </li>
 
-            <li class="{{ Route::is('home') ? "active-page" : "" }}">
-                <a href="{{ route('home') }}" class="{{ Route::is("home") ? "active" : "" }}">
+            <li class="{{ Route::is('admin.index') ? "active-page" : "" }}">
+                <a href="{{ route('admin.index') }}" class="{{ Route::is("admin.index") ? "active" : "" }}">
                     <i class="material-icons-two-tone">dashboard</i>
                     Dashboard
                 </a>
@@ -35,6 +35,9 @@
                     <li>
                         <a href="{{ route('article.index') }}" class="{{ Route::is("article.index") ? "active" : "" }}">Article List</a>
                     </li>
+                    <li>
+                        <a href="{{ route('article.pending-approval') }}" class="{{ Route::is("article.pending-approval") ? "active" : "" }}">Pending Approval Comments</a>
+                    </li>
                 </ul>
             </li>
 
@@ -50,6 +53,22 @@
                     </li>
                     <li>
                         <a href="{{ route('category.index') }}" class="{{ Route::is("category.index") ? "active" : "" }}">Category List</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="{{ Route::is("user.*") ? "open" : "" }}">
+                <a href="#">
+                    <i class="material-icons-two-tone">manage_accounts</i>
+                    Users
+                    <i class="material-icons has-sub-menu">keyboard_arrow_right</i>
+                </a>
+                <ul class="sub-menu" style="">
+                    <li>
+                        <a href="{{ route('user.create') }}" class="{{ Route::is("user.create") ? "active" : "" }}">New User</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('user.index') }}" class="{{ Route::is("user.index") ? "active" : "" }}">User List</a>
                     </li>
                 </ul>
             </li>

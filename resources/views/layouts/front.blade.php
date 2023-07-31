@@ -221,6 +221,7 @@
 
 <script src="{{ asset("assets/front/js/highlight.min.js") }}"></script>
 <script src="{{ asset("assets/front/js/main.js") }}"></script>
+@include('sweetalert::alert')
 @yield("js")
 </body>
 </html>
