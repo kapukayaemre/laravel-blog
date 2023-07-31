@@ -53,6 +53,14 @@
                     </li>
                 </ul>
             </li>
+
+            <li class="{{ Route::is('settings') ? "active-page" : "" }}">
+                <a href="{{ route('settings') }}" class="{{ Route::is("settings") ? "active" : "" }}">
+                    <i class="material-icons-two-tone">settings</i>
+                    Settings
+                </a>
+            </li>
+
         </ul>
     </div>
 </div>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,10 @@ Route::prefix("admin")->middleware('auth')->group(function () {
     Route::post("categories/delete", [CategoryController::class, "delete"])->name("category.delete");
     Route::get("categories/{id}/edit", [CategoryController::class, "edit"])->name("category.edit")->whereNumber('id');
     Route::post("categories/{id}/edit", [CategoryController::class, "update"])->whereNumber('id');
+
+
+    Route::get("settings", [SettingsController::class, "show"])->name("settings");
+    Route::post("settings", [SettingsController::class, "update"]);
 
 });
 

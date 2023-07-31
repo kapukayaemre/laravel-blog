@@ -54,7 +54,7 @@
                         >
 
                         <label for="summernote" class="form-label">Article Body</label>
-                        <textarea name="body" id="summernote" class="m-b-sm">Hello Summernote</textarea>
+                        <textarea name="body" id="summernote" class="m-b-sm">{!! isset($article) ? $article->body : "" !!}</textarea>
 
                         <label for="tags" class="form-label m-t-sm">Article Tags</label>
                         <input

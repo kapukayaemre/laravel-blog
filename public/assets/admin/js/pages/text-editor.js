@@ -43,4 +43,34 @@ $(document).ready(function(){
             lfm: LFMButton
         }
     })
+
+    $('#header_text').summernote({
+        height: 200,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        buttons: {
+            lfm: LFMButton
+        }
+    })
+
+    $('#footer_text').summernote({
+        height: 200,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        buttons: {
+            lfm: LFMButton
+        }
+    })
 });
