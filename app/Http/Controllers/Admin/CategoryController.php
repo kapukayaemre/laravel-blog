@@ -63,6 +63,7 @@ class CategoryController extends Controller
         try {
             $category                  = new Category();
             $category->name            = $request->name;
+            $category->color           = $request->color;
             $category->slug            = is_null($this->slugCheck($slug)) ? $slug : Str::slug($slug . time());
             $category->description     = $request->description;
             $category->status          = $request->status ? 1 : 0;
@@ -208,6 +209,7 @@ class CategoryController extends Controller
         try {
             $category       = Category::find($request->id);
             $category->name = $request->name;
+            $category->color  = $request->color;
 
             if ((!is_null($slugCheck) && $slugCheck->id === $category->id) || is_null($slugCheck)) {
                 $category->slug = $slug;

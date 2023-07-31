@@ -11,7 +11,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">    <link href="{{ asset("assets/front/material-icons/iconfont/material-icons.css") }}" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+        rel="stylesheet">
+    <link href="{{ asset("assets/front/material-icons/iconfont/material-icons.css") }}" rel="stylesheet">
     <link href="{{ asset("assets/front/material-icons/iconfont/material-icons.css") }}" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset("assets/front/swiper/swiper-bundle.min.css") }}">
@@ -30,7 +33,8 @@
     <div class="container">
         <div class="header-top d-flex justify-content-between align-items-center header-border header-h">
             <div class="header-logo">
-                <img src="{{ isset($settings) ? asset($settings->logo) : asset("assets/front/image/logo.png") }}" class="logo-h img-fluid">
+                <img src="{{ isset($settings) ? asset($settings->logo) : asset("assets/front/image/logo.png") }}"
+                     class="logo-h img-fluid">
             </div>
             <div class="header-text d-none d-md-block">
                 @isset($settings)
@@ -44,13 +48,16 @@
                 <span class="material-icons" id="searchIcon1">search</span>
                 <form action="" class="position-relative" style="display: none" id="searchForm">
                     <input type="text" name="search_text" id="search_text" placeholder="Search">
-                    <span class="material-icons position-absolute" id="searchIcon2" style="right: 0; top: 0; bottom: 0;">search</span>
+                    <span class="material-icons position-absolute" id="searchIcon2"
+                          style="right: 0; top: 0; bottom: 0;">search</span>
                 </form>
             </div>
         </div>
         <div class="header-bottom">
             <nav class="navbar navbar-expand-lg navbar-light ">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -62,13 +69,16 @@
                             <a class="nav-link" href="#">Link</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
                                 Dropdown
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Action</a></li>
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
                             </ul>
                         </li>
@@ -95,12 +105,12 @@
                 <section class="categories bg-white shadow-sm">
                     <h4 class="bg-light text-secondary p-3 border-bottom border-1 border-light m-0">Kategoriler</h4>
                     <ul class="list-group m-0">
-                        <li class="px-3 py-3"><a href="">Html <span class="text-warning float-end me-3">&#x25CF;</span></a></li>
-                        <li class="px-3 py-3"><a href="">Html <span class="text-primary float-end me-3">&#x25CF;</span></a></li>
-                        <li class="px-3 py-3"><a href="">Html <span class="text-danger float-end me-3">&#x25CF;</span></a></li>
-                        <li class="px-3 py-3"><a href="">Html <span class="text-danger float-end me-3">&#x25CF;</span></a></li>
-                        <li class="px-3 py-3"><a href="">Html <span class="text-danger float-end me-3">&#x25CF;</span></a></li>
-                        <li class="px-3 py-3"><a href="">Html <span class="text-danger float-end me-3">&#x25CF;</span></a></li>
+                        @foreach($categories as $category)
+                            <li class="px-3 py-3">
+                                <a href="{{ route("front.category", $category->slug) }}">{{ $category->name }}
+                                    <span class="float-end me-3" style="color: {{ $category->color }}">&#x25CF;</span></a>
+                            </li>
+                        @endforeach
                     </ul>
                 </section>
 
@@ -120,13 +130,17 @@
                                 </div>
 
                                 <div class="swiper-slide">
-                                    <iframe width="100%" src="https://www.youtube.com/embed/pFTkk22CbAg" title="ONUNCU YIL MARŞI" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                    <iframe width="100%" src="https://www.youtube.com/embed/pFTkk22CbAg"
+                                            title="ONUNCU YIL MARŞI" frameborder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                            allowfullscreen></iframe>
                                 </div>
                             </div>
                         </div>
 
                         <div class="most-popular-swiper-navigation text-end">
-                            <span class="btn btn-secondary btn-sm material-icons youtube-swiper-button-prev">arrow_back</span>
+                            <span
+                                class="btn btn-secondary btn-sm material-icons youtube-swiper-button-prev">arrow_back</span>
                             <span class="btn btn-secondary btn-sm material-icons youtube-swiper-button-next">arrow_forward</span>
                         </div>
 
@@ -172,7 +186,8 @@
                         </div>
 
                         <div class="most-popular-swiper-navigation text-end">
-                            <span class="btn btn-secondary btn-sm material-icons authors-swiper-button-prev">arrow_back</span>
+                            <span
+                                class="btn btn-secondary btn-sm material-icons authors-swiper-button-prev">arrow_back</span>
                             <span class="btn btn-secondary btn-sm material-icons authors-swiper-button-next">arrow_forward</span>
                         </div>
 
@@ -189,8 +204,7 @@
             $text = "";
             if (isset($settings))
             {
-                $text = str_replace("{copy}", "&copy;", $settings->footer_text);
-                $text = str_replace("{year}", date("Y"), $text);
+                $text = str_replace(array("{copy}", "{year}"), array("&copy;", date("Y")), $settings->footer_text);
             }
         @endphp
         {!! $text !!}

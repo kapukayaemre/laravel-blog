@@ -22,11 +22,18 @@
                     @endif
                     <form action="{{ isset($category) ? route('category.edit', $category->id) : route('category.create') }}" method="POST" enctype="multipart/form-data" id="categoryForm">
                         @csrf
+                        <label for="color" class="form-label">Category Color</label>
+                        <input
+                            type="color"
+                            name="color"
+                            id="color"
+                            value="{{ isset($category) ? $category->color : "" }}"
+                        ><br>
+
                         <label for="name" class="form-label">Category Name</label>
                         <input
                             type="text"
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('name')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Category Name"
                             name="name"
                             id="name"
@@ -42,7 +49,6 @@
                         <input
                             type="text"
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('slug')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Category Slug"
                             name="slug"
                             id="slug"
@@ -52,7 +58,6 @@
                         <label for="description" class="form-label">Category Description</label>
                         <textarea
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('description')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Category Description"
                             name="description"
                             id="description"
@@ -64,7 +69,6 @@
                         <input
                             type="number"
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('order')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Category Order"
                             name="order"
                             id="order"
@@ -84,7 +88,6 @@
                         <label for="seo_keywords" class="form-label">Category Seo Keywords</label>
                         <textarea
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('seo_keywords')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Category Seo Keywords"
                             name="seo_keywords"
                             id="seo_keywords"
@@ -95,7 +98,6 @@
                         <label for="seo_description" class="form-label">Category Seo Description</label>
                         <textarea
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('seo_description')) border-danger @endif"
-                            aria-describedby="solidBoderedInputExample"
                             placeholder="Category Seo Description"
                             name="seo_description"
                             id="seo_description"
