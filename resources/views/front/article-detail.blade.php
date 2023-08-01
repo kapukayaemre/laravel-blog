@@ -70,6 +70,7 @@
         <section class="article-responses mt-4">
             <div class="response-form bg-white shadow-sm rounded-1 p-4" style="display: none">
                 <form action="{{ route("article.comment", $article->id) }}" method="POST">
+                    <input type="hidden" name="parent_id" id="comment_parent_id" value="{{ null }}">
                     @csrf
                     <div class="row">
                         <div class="col-12">
@@ -97,114 +98,102 @@
             </div>
 
             <div class="response-body p-4">
-                <h3>Makaleye Verilen Cevaplar</h3>
+                <h3>Article Comments</h3>
                 <hr class="mb-4">
 
-                <div class="article-response-wrapper">
+                @foreach($article->comments as $comment)
+                    <div class="article-response-wrapper">
+                        <div class="article-response bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
+                            <div class="col-md-2 ms-2">
+                                @php
+                                    if ($comment->user)
+                                    {
+                                        $image = $comment->user->image;
+                                        $name = $comment->user->name;
 
-                    <div class="article-response bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
-                        <img src="assets/front/image/profile1.png" alt="" width="75" height="75">
-                        <div class="px-3">
-                            <div class="comment-title-date d-flex justify-content-between">
-                                <h4><a href="">Sercan Özen</a></h4>
-                                <time datetime="18-03-2023">18-03-2023</time>
+                                        if (!file_exists(public_path($image)))
+                                        {
+                                            $image = $settings->default_comment_profile_image;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $image = $settings->default_comment_profile_image;
+                                        $name = $comment->name;
+                                    }
+                                @endphp
+
+                                <img src="{{ asset($image) }}" alt="" width="75" height="75">
                             </div>
-                            <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium
-                                consequatur et fuga fugiat, inventore laboriosam, maxime natus praesentium quae
-                                reiciendis ullam. A dolor expedita facere, pariatur quibusdam veritatis
-                                vitae.</p>
-                            <div class="text-end d-flex  align-items-center justify-content-between">
-                                <div>
-                                    <a href="javascript:void(0)" class="btn-response btnArticleResponse">Answer</a>
-                                </div>
-                                <div class="d-flex  align-items-center">
-                                    <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                    <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
+                            <div class="col-md-10">
+                                <div class="px-3">
+                                    <div class="comment-title-date d-flex justify-content-between">
+                                        <h4 class="mt-3"><a href="">{{ $name }}</a></h4>
+                                        <time datetime="{{ \Carbon\Carbon::parse($comment->created_at)->format("d-m-Y") }}">
+                                            {{ \Carbon\Carbon::parse($comment->created_at)->format("d-m-Y") }}
+                                        </time>
+                                    </div>
+                                    <p class="text-secondary">{{ $comment->comment }}</p>
+                                    <div class="text-end d-flex  align-items-center justify-content-between">
+                                        <div>
+                                            <a href="javascript:void(0)" class="btn-response btnArticleResponseComment" data-id="{{ $comment->id }}">Answer</a>
+                                        </div>
+                                        <div class="d-flex  align-items-center">
+                                            <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
+                                            <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        @if($comment->children)
+                            <div class="articles-response-comment-wrapper">
+                                @foreach($comment->children as $child)
+                                    <div class="article-comment bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
+                                        <div class="col-md-2 ms-2">
+                                            @php
+                                                if ($child->user)
+                                                {
+                                                    $childImage = $child->user->image;
+                                                    $childName = $child->user->name;
+
+                                                    if (!file_exists(public_path($childImage)))
+                                                    {
+                                                        $childImage = $settings->default_comment_profile_image;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    $childImage = $settings->default_comment_profile_image;
+                                                    $childName = $child->name;
+                                                }
+                                            @endphp
+                                            <img src="{{ asset($childImage) }}" alt="" width="75" height="75">
+                                        </div>
+                                        <div class="col-md-10">
+                                            <div class="px-3">
+                                                <div class="comment-title-date d-flex justify-content-between">
+                                                    <h4 class="mt-3"><a href="">{{ $childName }}</a></h4>
+                                                    <time datetime="{{ \Carbon\Carbon::parse($child->created_at)->format("d-m-Y") }}">
+                                                        {{ \Carbon\Carbon::parse($child->created_at)->format("d-m-Y") }}
+                                                    </time>
+                                                </div>
+                                                <p class="text-secondary">{{ $child->comment }}</p>
+                                                <div class="text-end d-flex  align-items-center justify-content-between">
+                                                    <div class="d-flex  align-items-center">
+                                                        <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
+                                                        <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
-
-                    <div class="articles-response-comment-wrapper">
-                        <div class="article-comment bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
-                            <img src="assets/front/image/profile1.png" alt="" width="75" height="75">
-                            <div class="px-3">
-                                <div class="comment-title-date d-flex justify-content-between">
-                                    <h4><a href="">Sercan Özen</a></h4>
-                                    <time datetime="18-03-2023">18-03-2023</time>
-                                </div>
-                                <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium
-                                    consequatur et fuga fugiat, inventore laboriosam, maxime natus praesentium quae
-                                    reiciendis ullam. A dolor expedita facere, pariatur quibusdam veritatis
-                                    vitae.</p>
-                                <div class="text-end d-flex  align-items-center justify-content-end">
-                                    <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                    <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="article-comment-in bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
-                            <img src="assets/front/image/profile1.png" alt="" width="75" height="75">
-                            <div class="px-3">
-                                <div class="comment-title-date d-flex justify-content-between">
-                                    <h4><a href="">Sercan Özen</a></h4>
-                                    <time datetime="18-03-2023">18-03-2023</time>
-                                </div>
-                                <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium
-                                    consequatur et fuga fugiat, inventore laboriosam, maxime natus praesentium quae
-                                    reiciendis ullam. A dolor expedita facere, pariatur quibusdam veritatis
-                                    vitae.</p>
-                                <div class="text-end d-flex  align-items-center justify-content-end">
-                                    <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                    <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="article-response-wrapper">
-                    <div class="article-response bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
-                        <img src="assets/front/image/profile1.png" alt="" width="75" height="75">
-                        <div class="px-3">
-                            <div class="comment-title-date d-flex justify-content-between">
-                                <h4><a href="">Sercan Özen</a></h4>
-                                <time datetime="18-03-2023">18-03-2023</time>
-                            </div>
-                            <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium
-                                consequatur et fuga fugiat, inventore laboriosam, maxime natus praesentium quae
-                                reiciendis ullam. A dolor expedita facere, pariatur quibusdam veritatis
-                                vitae.</p>
-                            <div class="text-end d-flex  align-items-center justify-content-end">
-                                <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="article-response-wrapper">
-                    <div class="article-response bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
-                        <img src="assets/front/image/profile1.png" alt="" width="75" height="75">
-                        <div class="px-3">
-                            <div class="comment-title-date d-flex justify-content-between">
-                                <h4><a href="">Sercan Özen</a></h4>
-                                <time datetime="18-03-2023">18-03-2023</time>
-                            </div>
-                            <p class="text-secondary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium
-                                consequatur et fuga fugiat, inventore laboriosam, maxime natus praesentium quae
-                                reiciendis ullam. A dolor expedita facere, pariatur quibusdam veritatis
-                                vitae.</p>
-                            <div class="text-end d-flex  align-items-center justify-content-end">
-                                <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @endforeach
             </div>
         </section>
     </section>

@@ -42,7 +42,20 @@ class FrontController extends Controller
     {
         $settings = Settings::first();
         $categories = Category::query()->where("status", 1)->get();
-        $article = Article::query()->with("user")->where("slug",$articleSlug)->first();
+        $article = Article::query()->with([
+            "user",
+            "comments" => function ($query) {
+                $query->where("status", 1)
+                    ->whereNull("parent_id");
+            },
+            "comments.user",
+            "comments.children" => function ($query) {
+                $query->where("status", 1);
+            },
+            "comments.children.user"
+        ])
+            ->where("slug",$articleSlug)
+            ->first();
 
         return view("front.article-detail", compact("settings","categories","article"));
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
@@ -26,6 +27,11 @@ class Article extends Model
     public function user():HasOne
     {
         return $this->hasOne(User::class, "id", "user_id");
+    }
+
+    public function comments():HasMany
+    {
+        return $this->hasMany(ArticleComment::class, "article_id", "id");
     }
 
     public function scopeStatus($query, $status)

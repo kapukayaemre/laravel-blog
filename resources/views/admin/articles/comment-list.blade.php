@@ -95,10 +95,11 @@
                     @foreach($comments as $comment)
                         <tr id="row-{{ $comment->id }}">
                             <td>
-                                <a href="{{ route("front.articleDetail", ["user" => $comment->user->username, "article" => $comment->article->slug]) }}" target="_blank">
-                                    <div class="text-center">
-                                        <span class="material-icons-two-tone">visibility</span>
-                                    </div>
+                                <a href="{{ route("front.articleDetail",[
+                                    'user' => $comment->article->user->username,
+                                    'article' => $comment->article->slug
+                                 ]) }}" target="_blank">
+                                    <span class="material-icons-outlined">visibility</span>
                                 </a>
                             </td>
                             <td>{{ $comment->user?->name }}</td>
