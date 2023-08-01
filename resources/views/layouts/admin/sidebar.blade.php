@@ -36,6 +36,9 @@
                         <a href="{{ route('article.index') }}" class="{{ Route::is("article.index") ? "active" : "" }}">Article List</a>
                     </li>
                     <li>
+                        <a href="{{ route('article.comment-list') }}" class="{{ Route::is("article.comment-list") ? "active" : "" }}">All Comments List</a>
+                    </li>
+                    <li>
                         <a href="{{ route('article.pending-approval') }}" class="{{ Route::is("article.pending-approval") ? "active" : "" }}">Pending Approval Comments</a>
                     </li>
                 </ul>

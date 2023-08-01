@@ -1,6 +1,10 @@
 @extends("layouts.admin")
 @section("title")
-    Pending Approval Comment List
+    @if($page === "comment-list")
+        All Comment List
+    @else
+        Pending Approval Comment List
+    @endif
 @endsection
 @section("css")
     <link rel="stylesheet" href="{{ asset("assets/admin/plugins/flatpickr/flatpickr.min.css") }}">
@@ -17,11 +21,17 @@
 @section("content")
     <x-bootstrap.card>
         <x-slot:header>
-            <h2>Pending Approval Comment List</h2>
+            <h2>
+                @if($page === "comment-list")
+                    All Comment List
+                @else
+                    Pending Approval Comment List
+                @endif
+            </h2>
         </x-slot:header>
 
         <x-slot:body>
-            <form action="{{ route("article.pending-approval") }}" method="GET">
+            <form action="{{ $page === "comment-list" ? route("article.comment-list") : route("article.pending-approval") }}" method="GET">
                 <div class="row">
                     <div class="col-3 my-1">
                         <select class="form-select" name="user_id">
@@ -34,7 +44,7 @@
                         </select>
                     </div>
 
-                    @if($page === "commentList")
+                    @if($page === "comment-list")
                         <div class="col-3 my-1">
                             <select class="form-select" name="status" aria-label="Status">
                                 <option value="{{ null }}">Status</option>
@@ -120,8 +130,16 @@
                                        class="btn btn-danger btn-sm btnDelete"
                                        data-name="{{ $comment->id }}"
                                        data-id="{{ $comment->id }}">
-                                        <i class="material-icons ms-0">delete</i>
+                                       <i class="material-icons ms-0">delete</i>
                                     </a>
+                                    @if($comment->deleted_at)
+                                        <a href="javascript:void(0)"
+                                           class="btn btn-info btn-sm btnRestore"
+                                           data-name="{{ $comment->id }}"
+                                           data-id="{{ $comment->id }}">
+                                           <i class="material-icons ms-0">restore</i>
+                                        </a>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
@@ -217,11 +235,11 @@
             });
 
             $('.btnDelete').click(function () {
-                let articleID = $(this).data('id');
-                let articleName = $(this).data('name');
+                let commentID = $(this).data('id');
+                let comment = $(this).data('name');
 
                 Swal.fire({
-                    title: "Do you want to delete this " + articleName + "?",
+                    title: "Do you want to delete this " + comment + "?",
                     showDenyButton: true,
                     confirmButtonText: 'Yes',
                     denyButtonText: `No`
@@ -230,19 +248,66 @@
                     {
                         $.ajax({
                             method: "POST",
-                            url: "{{ route("article.delete") }}",
+                            url: "{{ route("comment.delete") }}",
                             data: {
                                 "_method": "DELETE",
-                                articleID : articleID
+                                commentID : commentID
                             },
                             async: false,
                             success: function (data){
-                                $('#row-' + articleID).remove();
+                                $('#row-' + commentID).remove();
 
                                 Swal.fire({
                                     icon: "success",
                                     title: "Success",
-                                    text: "Article Deleted Successfully",
+                                    text: "Comment Deleted Successfully",
+                                    confirmButtonText: 'Okay'
+                                });
+                            },
+                            error: function (){
+                                console.log("error comes");
+                            }
+                        })
+                    }
+                    else if (result.isDenied)
+                    {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Info",
+                            text: "Nothing Changed",
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                })
+
+            });
+
+            $('.btnRestore').click(function () {
+                let commentID = $(this).data('id');
+                let comment = $(this).data('name');
+                let self = $(this);
+
+                Swal.fire({
+                    title: "Do you want to restore this " + comment + "?",
+                    showDenyButton: true,
+                    confirmButtonText: 'Yes',
+                    denyButtonText: `No`
+                }).then((result) => {
+                    if (result.isConfirmed)
+                    {
+                        $.ajax({
+                            method: "POST",
+                            url: "{{ route("comment.restore") }}",
+                            data: {
+                                commentID : commentID
+                            },
+                            async: false,
+                            success: function (data){
+                                self.remove();
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "Comment Restored Successfully",
                                     confirmButtonText: 'Okay'
                                 });
                             },

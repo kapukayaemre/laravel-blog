@@ -36,6 +36,10 @@ Route::prefix("admin")->middleware('auth')->group(function () {
 
     Route::get("articles/pending-approval", [ArticleCommentController::class, "approvalList"])->name("article.pending-approval");
     Route::post("articles/pending-approval/change-status", [ArticleCommentController::class, "changeStatus"])->name("article.pending-approval.change-status");
+    Route::get("articles/comment-list", [ArticleCommentController::class, "list"])->name("article.comment-list");
+    Route::delete("articles-comment/delete", [ArticleCommentController::class, "delete"])->name("comment.delete");
+    Route::post("articles-comment/restore", [ArticleCommentController::class, "restore"])->name("comment.restore");
+
 
 
     Route::get("categories", [CategoryController::class, "index"])->name("category.index");

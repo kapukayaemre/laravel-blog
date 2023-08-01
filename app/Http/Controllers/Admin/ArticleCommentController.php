@@ -26,6 +26,23 @@ class ArticleCommentController extends Controller
         return view("admin.articles.comment-list", compact("comments", "users", "page"));
     }
 
+    public function list(Request $request)
+    {
+        $users = User::all();
+        $comments = ArticleComment::query()
+            ->withTrashed()
+            ->with(["user", "article", "children", "article.user"])
+            ->status($request->status)
+            ->user($request->user_id)
+            ->createdDate($request->created_at)
+            ->searchText($request->search_text)
+            ->paginate(10);
+
+        $page = "comment-list";
+
+        return view("admin.articles.comment-list", compact("comments", "users", "page"));
+    }
+
     public function changeStatus(Request $request): JsonResponse
     {
         $comment = ArticleComment::findOrFail($request->id);
@@ -41,4 +58,36 @@ class ArticleCommentController extends Controller
             ])
             ->setStatusCode(200);
     }
+
+    public function delete(Request $request)
+    {
+        $comment = ArticleComment::findOrFail($request->commentID);
+        $comment->delete();
+
+        return response()
+            ->json([
+                "status" => "success",
+                "message" => "Comment Deleted",
+                "data" => $comment,
+                "comment_status" => $comment->status
+            ])
+            ->setStatusCode(200);
+    }
+
+    public function restore(Request $request)
+    {
+        $comment = ArticleComment::withTrashed()->findOrFail($request->commentID);
+        $comment->restore();
+
+        return response()
+            ->json([
+                "status" => "success",
+                "message" => "Comment Restored",
+                "data" => $comment,
+                "comment_status" => $comment->status
+            ])
+            ->setStatusCode(200);
+
+    }
+
 }
