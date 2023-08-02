@@ -283,7 +283,7 @@ class ArticleController extends Controller
             ->where("id", $request->articleID)
             ->firstOrFail();
 
-        if ($article->articleLikes()->count())
+        if ($article->articleLikes->count())
         {
             $article->articleLikes()->delete();
 

@@ -145,9 +145,20 @@
                                         <div>
                                             <a href="javascript:void(0)" class="btn-response btnArticleResponseComment" data-id="{{ $comment->id }}">Answer</a>
                                         </div>
-                                        <div class="d-flex  align-items-center">
-                                            <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                            <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
+                                        <div class="d-flex align-items-center">
+                                            @php
+                                                $commentLike = $comment->commentLikes->where("user_id", auth()->id())->where("comment_id", $comment->id)->first();
+                                            @endphp
+                                            <a href="javascript:void(0)"
+                                               class="like-comment"
+                                               data-id="{{ $comment->id }}"
+                                               @if($commentLike)
+                                                   style="color: red"
+                                               @endif
+                                            >
+                                                <span class="material-icons">thumb_up</span>
+                                            </a>
+                                            <span id="commentLikeCount-{{ $comment->id }}">{{ $comment->like_count }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -188,9 +199,20 @@
                                                 </div>
                                                 <p class="text-secondary">{{ $child->comment }}</p>
                                                 <div class="text-end d-flex  align-items-center justify-content-between">
-                                                    <div class="d-flex  align-items-center">
-                                                        <a href="javascript:void(0)" class="like-comment"><span class="material-icons">thumb_up</span></a>
-                                                        <a href="javascript:void(0)" class="like-comment"><span class="material-icons-outlined">thumb_up_off_alt</span></a> 12
+                                                    <div class="d-flex align-items-center">
+                                                        @php
+                                                            $commentLikeChild = $child->commentLikes->where("user_id", auth()->id())->where("comment_id", $child->id)->first();
+                                                        @endphp
+                                                        <a href="javascript:void(0)"
+                                                           class="like-comment"
+                                                           data-id="{{ $child->id }}"
+                                                           @if($commentLikeChild)
+                                                               style="color: red"
+                                                            @endif
+                                                        >
+                                                            <span class="material-icons">thumb_up</span>
+                                                        </a>
+                                                        <span id="commentLikeCount-{{ $child->id }}">{{ $child->like_count }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -243,6 +265,46 @@
                         icon: "info",
                         title: "Info",
                         text: "You need login to for add favorite",
+                        confirmButtonText: "Okay"
+                    })
+                @endif
+
+            })
+
+            $(".like-comment").click(function ()
+            {
+                @if(Auth::check())
+                    let commentID = $(this).data("id");
+                    let self = $(this);
+
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route("comment.favorite") }}",
+                        data: {
+                            id : commentID
+                        },
+                        async: false,
+                        success: function (data){
+                            if(data.process)
+                            {
+                                self.css("color", "red")
+                            }
+                            else
+                            {
+                                self.css("color", "inherit")
+                            }
+
+                            $("#commentLikeCount-" + commentID).text(data.like_count)
+                        },
+                        error: function (){
+                            console.log("error comes");
+                        }
+                    })
+                @else
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "You need login for like comments",
                         confirmButtonText: "Okay"
                     })
                 @endif

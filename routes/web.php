@@ -40,6 +40,7 @@ Route::prefix("admin")->middleware('auth')->group(function () {
     Route::get("articles/comment-list", [ArticleCommentController::class, "list"])->name("article.comment-list");
     Route::delete("articles-comment/delete", [ArticleCommentController::class, "delete"])->name("comment.delete");
     Route::post("articles-comment/restore", [ArticleCommentController::class, "restore"])->name("comment.restore");
+    Route::post("articles-comment/favorite", [ArticleCommentController::class, "favorite"])->name("comment.favorite");
 
 
 
