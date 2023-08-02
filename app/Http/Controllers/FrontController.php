@@ -14,16 +14,16 @@ class FrontController extends Controller
 {
     public function home()
     {
-        $settings = Settings::first();
+        $settings   = Settings::first();
         $categories = Category::query()->where("status", 1)->get();
-        return view("front.index", compact("settings","categories"));
+        return view("front.index", compact("settings", "categories"));
     }
 
     public function category(Request $request, string $slug)
     {
-        $settings = Settings::first();
+        $settings   = Settings::first();
         $categories = Category::query()->where("status", 1)->get();
-        $category = Category::query()->with("articlesActive")->where("slug", $slug)->first();
+        $category   = Category::query()->with("articlesActive")->where("slug", $slug)->first();
 
         /* ? Alternative for relations with data
          * $articles = $category->articlesActive()->with(["user", "category"])->paginate(2);
@@ -40,11 +40,13 @@ class FrontController extends Controller
 
     public function articleDetail(Request $request, string $username, string $articleSlug)
     {
-        $settings = Settings::first();
+        $settings   = Settings::first();
         $categories = Category::query()->where("status", 1)->get();
-        $article = Article::query()->with([
+
+        $article    = Article::query()->with([
             "user",
-            "comments" => function ($query) {
+            "user.articleLike",
+            "comments"          => function ($query) {
                 $query->where("status", 1)
                     ->whereNull("parent_id");
             },
@@ -54,21 +56,25 @@ class FrontController extends Controller
             },
             "comments.children.user"
         ])
-            ->where("slug",$articleSlug)
+            ->where("slug", $articleSlug)
             ->first();
 
-        return view("front.article-detail", compact("settings","categories","article"));
+        $userLike = $article->user->articleLike->where("article_id", $article->id)->first();
+
+        $article->increment("view_count");
+        $article->save();
+
+        return view("front.article-detail", compact("settings", "categories", "article", "userLike"));
     }
 
     public function articleComment(Request $request, Article $article)
     {
         $data = $request->except("_token");
-        if (Auth::check())
-        {
+        if (Auth::check()) {
             $data["user_id"] = Auth::id();
         }
         $data["article_id"] = $article->id;
-        $data["ip"] = $request->ip();
+        $data["ip"]         = $request->ip();
 
         ArticleComment::create($data);
 

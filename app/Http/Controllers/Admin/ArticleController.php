@@ -8,6 +8,7 @@ use App\Http\Requests\ArticleUpdateRequest;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\UserLikeArticle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -270,5 +271,47 @@ class ArticleController extends Controller
     public function slugCheck(string $text)
     {
         return Article::where("slug", $text)->first();
+    }
+
+    public function favorite(Request $request)
+    {
+        $article = Article::query()->with(["articleLikes" => function($query)
+        {
+            $query->where("user_id", auth()->id());
+        }
+        ])
+            ->where("id", $request->articleID)
+            ->firstOrFail();
+
+        if ($article->articleLikes()->count())
+        {
+            $article->articleLikes()->delete();
+
+            /*? Same process on above codes
+             * UserLikeArticle::query()
+                ->where("user_id", auth()->id())
+                ->where("article_id", $article->id)
+                ->delete();
+            */
+            $article->like_count--;
+            $process = 0;
+        }
+        else
+        {
+            UserLikeArticle::create([
+               'user_id' => auth()->id(),
+                'article_id' => $article->id
+            ]);
+
+            $article->like_count++;
+            $process = 1;
+        }
+
+        $article->save();
+
+        return response()
+            ->json(["status" => "success", "message" => "Success", "like_count" => $article->like_count, "process" => $process ])
+            ->setStatusCode(200);
+
     }
 }

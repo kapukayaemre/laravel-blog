@@ -46,10 +46,17 @@
         <section class="col-12 mt-4">
             <div class="article-items d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <a href="javascript:void(0)" class="favorite-article me-1">
+                    <a href="javascript:void(0)"
+                       class="favorite-article me-1"
+                       id="favoriteArticle"
+                       data-id="{{ $article->id }}"
+                       @if(!is_null($userLike))
+                           style="color: red"
+                       @endif
+                    >
                         <span class="material-icons-outlined">favorite</span>
                     </a>
-                    <span class="fw-light">100</span>
+                    <span class="fw-light" id="favoriteCount">{{ $article->like_count }}</span>
                 </div>
                 <a href="javascript:void(0)" class="btn-response btnArticleResponse">Answer</a>
 
@@ -199,6 +206,48 @@
     </section>
 @endsection
 
-@section("css")
+@section("js")
+    <script>
+        $(document).ready(function () {
+            $("#favoriteArticle").click(function ()
+            {
+                @if(Auth::check())
+                    let articleID = $(this).data("id");
+                    let self = $(this);
 
+                    $.ajax({
+                        method: "POST",
+                        url: "{{ route("article.favorite") }}",
+                        data: {
+                            articleID : articleID
+                        },
+                        async: false,
+                        success: function (data){
+                            if(data.process)
+                            {
+                                self.css("color", "red")
+                            }
+                            else
+                            {
+                                self.css("color", "inherit")
+                            }
+
+                            $("#favoriteCount").text(data.like_count)
+                        },
+                        error: function (){
+                            console.log("error comes");
+                        }
+                    })
+                @else
+                    Swal.fire({
+                        icon: "info",
+                        title: "Info",
+                        text: "You need login to for add favorite",
+                        confirmButtonText: "Okay"
+                    })
+                @endif
+
+            })
+        })
+    </script>
 @endsection

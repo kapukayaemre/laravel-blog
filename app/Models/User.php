@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -64,5 +65,20 @@ class User extends Authenticatable
                     ->orWhere("email", "LIKE", "%". $search_text ."%");
             });
         }
+    }
+
+    public function articles():HasMany
+    {
+        return $this->hasMany(Article::class, "user_id", "id");
+    }
+
+    public function categories():HasMany
+    {
+        return $this->hasMany(Category::class, "user_id", "id");
+    }
+
+    public function articleLike():HasMany
+    {
+        return $this->hasMany(UserLikeArticle::class, "user_id", "id");
     }
 }

@@ -32,6 +32,7 @@ Route::prefix("admin")->middleware('auth')->group(function () {
     Route::post("articles/{id}/edit", [ArticleController::class, "update"]);
     Route::post("articles/change-status", [ArticleController::class, "changeStatus"])->name("article.changeStatus");
     Route::delete("articles/delete", [ArticleController::class, "delete"])->name("article.delete");
+    Route::post("articles/favorite", [ArticleController::class, "favorite"])->name("article.favorite");
 
 
     Route::get("articles/pending-approval", [ArticleCommentController::class, "approvalList"])->name("article.pending-approval");
