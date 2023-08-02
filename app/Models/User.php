@@ -25,7 +25,14 @@ class User extends Authenticatable
         'email',
         'password',
         'about',
-        'image'
+        'image',
+        'google_id',
+        'facebook_id',
+        'twitter_id',
+        'github_id',
+        'status',
+        'is_admin',
+        'email_verified_at'
     ];
 
     /**
@@ -65,6 +72,12 @@ class User extends Authenticatable
                     ->orWhere("email", "LIKE", "%". $search_text ."%");
             });
         }
+    }
+
+    public function scopeIsAdmin($query, $is_admin)
+    {
+        if (!is_null($is_admin))
+            return $query->where("is_admin", $is_admin);
     }
 
     public function articles():HasMany

@@ -88,21 +88,43 @@
                             <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                         </li>
                     </ul>
+                    @auth
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link d-flex" aria-current="page" href="{{ route("register") }}">
+                                    <i class="fa fa-user d-flex align-items-center"></i>
+                                    &nbsp;{{ auth()->user()->username }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex" aria-current="page" href="javascript:void(0)"
+                                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                >
+                                    <i class="fa fa-close d-flex align-items-center"></i>
+                                    &nbsp;Logout
+                                </a>
+                                <form action="{{ route("logout") }}" method="POST" id="logout-form">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
+                    @else
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link d-flex" aria-current="page" href="{{ route("register") }}">
+                                    <span class="material-icons-two-tone align-items-center">person_add</span>
+                                    &nbsp;Register
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex" aria-current="page" href="{{ route("user.login") }}">
+                                    <span class="material-icons-two-tone align-items-center">account_circle</span>
+                                    &nbsp;Login
+                                </a>
+                            </li>
+                        </ul>
+                    @endauth
 
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link d-flex" aria-current="page" href="{{ route("register") }}">
-                                <span class="material-icons-two-tone align-items-center">person_add</span>
-                                &nbsp;Register
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link d-flex" aria-current="page" href="#">
-                                <span class="material-icons-two-tone align-items-center">account_circle</span>
-                                &nbsp;Login
-                            </a>
-                        </li>
-                    </ul>
                 </div>
             </nav>
         </div>

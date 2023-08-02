@@ -30,7 +30,7 @@
         <x-slot:body>
             <form action="{{ route("user.index") }}" method="GET">
                 <div class="row">
-                    <div class="col-6 my-1">
+                    <div class="col-4 my-1">
                         <select class="form-select" name="status" aria-label="Status">
                             <option value="{{ null }}">Status</option>
                             <option value="0" {{ request()->get("status") === "0" ? "selected" : "" }}>Inactive</option>
@@ -38,7 +38,15 @@
                         </select>
                     </div>
 
-                    <div class="col-6 my-1">
+                    <div class="col-4 my-1">
+                        <select class="form-select" name="is_admin" aria-label="Is Admin">
+                            <option value="{{ null }}">Select Role</option>
+                            <option value="0" {{ request()->get("is_admin") === "0" ? "selected" : "" }}>User</option>
+                            <option value="1" {{ request()->get("is_admin") === "1" ? "selected" : "" }}>Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="col-4 my-1">
                         <input type="text" class="form-control" placeholder="Name, Username, Email" name="search_text" value="{{ request()->get("search_text") }}">
                     </div>
 
@@ -65,6 +73,7 @@
                     <th scope="col">Username</th>
                     <th scope="col">Email</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Is Admin</th>
                     <th scope="col">Actions</th>
                 </x-slot:columns>
 
@@ -84,6 +93,13 @@
                                     <a href="javascript:void(0)" class="btn btn-success btn-sm btnChangeStatus" data-id="{{ $user->id }}">Active</a>
                                 @else
                                     <a href="javascript:void(0)" class="btn btn-danger btn-sm btnChangeStatus" data-id="{{ $user->id }}">Inactive</a>
+                                @endif
+                            </td>
+                            <td>
+                                @if($user->is_admin)
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-sm btnChangeIsAdmin" data-id="{{ $user->id }}">Admin</a>
+                                @else
+                                    <a href="javascript:void(0)" class="btn btn-secondary btn-sm btnChangeIsAdmin" data-id="{{ $user->id }}">User</a>
                                 @endif
                             </td>
                             <td>
@@ -168,6 +184,66 @@
                                     icon: "success",
                                     title: "Success",
                                     text: "Status Updated Successfully",
+                                    confirmButtonText: 'Okay',
+                                });
+
+                            },
+                            error: function (){
+                                console.log("hata geldi");
+                            }
+                        })
+                    }
+                    else if (result.isDenied)
+                    {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Info",
+                            text: "Nothing Changed",
+                            confirmButtonText: 'Okay',
+                        });
+                    }
+                })
+            });
+
+            $('.btnChangeIsAdmin').click(function () {
+                let userID = $(this).data('id');
+                let self = $(this);
+
+                Swal.fire({
+                    icon: "question",
+                    title: 'Do you want change the user role?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Change',
+                    denyButtonText: `Don't Change`
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed)
+                    {
+                        $.ajax({
+                            method: "POST",
+                            url: "{{ route("user.changeIsAdmin") }}",
+                            data: {
+                                userID : userID
+                            },
+                            async: false,
+                            success: function (data){
+                                if(data.is_admin)
+                                {
+                                    self.removeClass("btn-secondary");
+                                    self.addClass("btn-primary");
+                                    self.text("Admin");
+                                }
+                                else
+                                {
+                                    self.removeClass("btn-primary");
+                                    self.addClass("btn-secondary");
+                                    self.text("User");
+                                }
+
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "User Role Updated Successfully",
                                     confirmButtonText: 'Okay',
                                 });
 
