@@ -21,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix("admin")->middleware('auth')->group(function () {
+
+    Route::group(['prefix' => 'filemanager'], function () {
+        \UniSharp\LaravelFilemanager\Lfm::routes();
+    });
+
     Route::get('/', function () {
         return view('admin.index');
     })->name('admin.index');
@@ -70,13 +75,11 @@ Route::prefix("admin")->middleware('auth')->group(function () {
 
 });
 
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
+
 
 Route::get('/', [FrontController::class, "home"])->name('home');
 Route::get('/categories/{category:slug}', [FrontController::class, "category"])->name('front.category');
-Route::get('/{user:username}/{article:slug}', [FrontController::class, "articleDetail"])->name('front.articleDetail');
+Route::get('/@{user:username}/{article:slug}', [FrontController::class, "articleDetail"])->name('front.articleDetail');
 Route::post("/{article:id}/article-comment", [FrontController::class, "articleComment"])->name("article.comment");
 
 

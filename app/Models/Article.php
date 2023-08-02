@@ -14,7 +14,7 @@ class Article extends Model
 
     protected $guarded = ["id", "created_at", "updated_at"];
 
-    public function getTagsAttribute():array|false
+    public function getTagsToArrayAttribute():array|false
     {
         return explode(",", $this->attributes['tags']);
     }

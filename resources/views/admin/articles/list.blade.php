@@ -134,11 +134,7 @@
                                     {{substr( $article->body , 0 , 20)}}
                                 </span>
                             </td>
-                            <td>
-                                @foreach($article->getTagsAttribute() as $tag)
-                                    {{ $tag }}
-                                @endforeach
-                            </td>
+                            <td>{{ $article->tags }}</td>
                             <td>{{ $article->view_count }}</td>
                             <td>{{ $article->like_count }}</td>
                             <td>{{ $article->category->name }}</td>
