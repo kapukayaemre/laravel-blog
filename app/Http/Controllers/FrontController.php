@@ -14,15 +14,12 @@ class FrontController extends Controller
 {
     public function home()
     {
-        $settings   = Settings::first();
-        $categories = Category::query()->where("status", 1)->get();
-        return view("front.index", compact("settings", "categories"));
+        return view("front.index");
     }
 
     public function category(Request $request, string $slug)
     {
-        $settings   = Settings::first();
-        $categories = Category::query()->where("status", 1)->get();
+
         $category   = Category::query()->with("articlesActive")->where("slug", $slug)->first();
 
         /* ? Alternative for relations with data
@@ -35,13 +32,11 @@ class FrontController extends Controller
                 $query->where("slug", $slug);
             })->paginate(12);
 
-        return view("front.article-list", compact("settings", "categories", "category", "articles"));
+        return view("front.article-list", compact("category", "articles"));
     }
 
     public function articleDetail(Request $request, string $username, string $articleSlug)
     {
-        $settings   = Settings::first();
-        $categories = Category::query()->where("status", 1)->get();
 
         $article    = Article::query()->with([
             //"user",
@@ -70,7 +65,7 @@ class FrontController extends Controller
         $article->increment("view_count");
         $article->save();
 
-        return view("front.article-detail", compact("settings", "categories", "article", "userLike"));
+        return view("front.article-detail", compact("article", "userLike"));
     }
 
     public function articleComment(Request $request, Article $article)
