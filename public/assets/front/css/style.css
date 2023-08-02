@@ -17,6 +17,9 @@ body{
 .bg-orange{
     background-color: #ee8606;
 }
+.text-orange{
+    color: #ee8606;
+}
 
 
 .header-border{
@@ -28,7 +31,7 @@ body{
 
 .header-text p {
     margin: inherit;
-    
+
 }
 .logo-h{
     max-height: 30px;
@@ -75,7 +78,7 @@ body{
     text-decoration: none;
 }
 
-.swiper-most-popular, .swiper-youtube, .swiper-authors {
+.swiper-most-popular, .swiper-youtube, .swiper-authors, .swiper-suggest-article {
     width: 100%;
     /*height: 350px;*/
     margin-left: auto;
@@ -92,7 +95,7 @@ body{
 .most-popular-author{
     color: #5c636a;
     font-size: 12px;
-     font-weight: 600;
+    font-weight: 600;
     letter-spacing: 0.02em;
 }
 .most-popular-author a{
@@ -168,7 +171,7 @@ code {
     background-color: #ee8606;
     color: #fff;
 }
-.favorite-article{
+.favorite-article, .social-media-register a, .article-header-date a{
     text-decoration: none;
     color: inherit;
 }
@@ -203,22 +206,77 @@ code {
 .articles-response-comment-wrapper{
 
 }
-.like-comment{
+.like-comment, .btn-password-reset{
     text-decoration: none;
     color: inherit;
 }
-.like-comment:hover{
+.like-comment:hover, .btn-password-reset:hover{
     color: #ee8606;
 }
 .comment-title-date time{
     color: inherit;
     font-size: 13px;
 }
-.response-form input, .response-form textarea{
+.response-form input, .response-form textarea, .register-form input{
     border: unset;
     border-radius: unset;
     border-bottom: 1px solid #9ea1a2;
 }
+a.category-link:hover{
+    color: #ee8606;
+}
+.category-image-overlay{
+    background-color: #000;
+    position: absolute;
+    left: 0;
+    right:0;
+    top: 0;
+    bottom: 0;
+    height: 300px;
+    /*opacity: 0.25;*/
+}
+.most-popular-category-wrapper:hover{
+    cursor: pointer;
+}
+.most-popular-category{
+    transition: transform 0.5s;
+}
+.most-popular-category:hover{
+    transition-duration: 0.8s;
+    transform: scale(1.2);
+}
+@keyframes scrollMovie {
+    0%{
+        transform: translateY(0);
+    }
+    100%{
+        transform: translateY(-10px);
+    }
+}
+.scroll-to-top{
+    right:13px;
+    bottom: 100px;
+    background-color: #eb8508;
+    opacity: 0.75;
+    animation: scrollMovie 0.75s infinite alternate;
+    cursor: pointer;
+    display: none;
+}
+
+
+.btn-circle{
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    border-radius: 25px;
+    font-size: 20px;
+    text-align: center;
+
+}
+.bg-sub-category{
+    background-color: #eaeaea;
+}
+
 
 @media screen and (max-width: 768px) {
 

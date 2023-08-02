@@ -1,0 +1,74 @@
+@extends("layouts.front")
+
+@section("title")
+    Register
+@endsection
+
+@section("css")
+@endsection
+
+@section("content")
+    <div class="row">
+        <div class="col-md-12">
+            <x-bootstrap.card>
+                <x-slot:header>
+                    REGISTER FORM
+                </x-slot:header>
+                <x-slot:body>
+                    <form action="{{ route("register") }}" method="POST" class="register-form">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12 mt-2">
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Name and Surname">
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                <input type="email" name="email" id="email" class="form-control" placeholder="Email">
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Username">
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Password">
+                                <small>
+                                    Password must include uppercase, lowercase and number characters.
+                                </small>
+                                <hr class="my-4">
+                            </div>
+
+                            <div class="col-md-12 social-media-register">
+                                <div class="d-flex justify-content-center">
+                                    <a href="">
+                                        <i class="fa fa-google fa-2x me-3"></i>
+                                    </a>
+                                    <a href="">
+                                        <i class="fa fa-facebook fa-2x me-3"></i>
+                                    </a>
+                                    <a href="">
+                                        <i class="fa fa-twitter fa-2x me-3"></i>
+                                    </a>
+                                    <a href="">
+                                        <i class="fa fa-github fa-2x me-3"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mt-4">
+                                <div class="d-flex justify-content-end">
+                                    <small>
+                                        <a class="btn-password-reset" href="">Forget Password</a>
+                                    </small>
+                                </div>
+                                <hr class="m-0 mb-4">
+
+                                <button class="btn btn-success w-100">REGISTER</button>
+                            </div>
+                        </div>
+                    </form>
+                </x-slot:body>
+            </x-bootstrap.card>
+        </div>
+    </div>
+@endsection
+
+@section("js")
+@endsection

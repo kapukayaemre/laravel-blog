@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\UserStoreRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -96,11 +97,18 @@ class LoginController extends Controller
 
     public function showRegister()
     {
-        return view('auth.register');
+        return view('front.auth.register');
     }
 
-    public function register()
+    public function register(UserStoreRequest $request)
     {
+        $user = new User();
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->status = 0;
+        $user->save();
 
     }
 

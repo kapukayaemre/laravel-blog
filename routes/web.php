@@ -75,6 +75,9 @@ Route::prefix("admin")->middleware('auth')->group(function () {
 
 });
 
+Route::get("admin/login", [LoginController::class, "showLogin"])->name("login");
+Route::post("admin/login", [LoginController::class, "login"]);
+
 
 
 Route::get('/', [FrontController::class, "home"])->name('home');
@@ -83,9 +86,7 @@ Route::get('/@{user:username}/{article:slug}', [FrontController::class, "article
 Route::post("/{article:id}/article-comment", [FrontController::class, "articleComment"])->name("article.comment");
 
 
-Route::get("/login", [LoginController::class, "showLogin"])->name("login");
-Route::post("/login", [LoginController::class, "login"]);
 Route::post("/logout", [LoginController::class, "logout"])->name("logout");
 
-Route::get("/register", [LoginController::class, "showRegister"])->name("register");
-Route::post("/register", [LoginController::class, "register"]);
+Route::get("register", [LoginController::class, "showRegister"])->name("register");
+Route::post("register", [LoginController::class, "register"]);
