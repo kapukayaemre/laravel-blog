@@ -19,7 +19,6 @@ class FrontController extends Controller
 
     public function category(Request $request, string $slug)
     {
-
         $category   = Category::query()->with("articlesActive")->where("slug", $slug)->first();
 
         /* ? Alternative for relations with data
@@ -27,29 +26,42 @@ class FrontController extends Controller
          * */
 
         $articles = Article::query()
-            ->with(["category:id,name", "user:id,name,username"])
+            ->with(["category:id,name,slug", "user:id,name,username"])
             ->whereHas("category", function ($query) use ($slug) {
                 $query->where("slug", $slug);
             })->paginate(12);
 
-        return view("front.article-list", compact("category", "articles"));
+        $title = Category::query()->where("slug", $slug)->first()->name . " Category Articles";
+
+        return view("front.article-list", compact("category", "articles", "title"));
     }
 
     public function articleDetail(Request $request, string $username, string $articleSlug)
     {
         $article = session()->get("last_article");
         $visitedArticles = session()->get("visited_articles");
-
-        $visitedArticlesCategoryIds = Article::query()
+        $visitedArticlesCategoryIds = [];
+        $visitedArticleAuthorIds = [];
+        $visitedInfo = Article::query()
+            ->select("user_id", 'category_id')
             ->whereIn("id", $visitedArticles)
-            ->pluck("category_id");
+            ->get();
+        foreach ($visitedInfo as $item)
+        {
+            $visitedArticlesCategoryIds[] = $item->category_id;
+            $visitedArticleAuthorIds[] = $item->user_id;
+        }
 
         $suggestArticles = Article::query()
-            ->with(["user", "category"])
-            ->whereIn("category_id", $visitedArticlesCategoryIds)
+            ->with(['user', 'category'])
+            ->where(function($query) use ($visitedArticlesCategoryIds, $visitedArticleAuthorIds){
+                $query->whereIn("category_id", $visitedArticlesCategoryIds)
+                    ->orWhereIn('user_id', $visitedArticleAuthorIds);
+            })
             ->whereNotIn("id", $visitedArticles)
             ->limit(6)
             ->get();
+
 
         $userLike = $article
             ->articleLikes
@@ -80,7 +92,49 @@ class FrontController extends Controller
             ->autoClose(5000);
 
         return redirect()->back();
+    }
 
+    public function authorArticles(Request $request, string $username)
+    {
+        $articles = Article::query()
+            ->with(["category:id,name,slug", "user:id,name,username"])
+            ->whereHas("user", function ($query) use ($username) {
+                $query->where("username", $username);
+            })->paginate(12);
+
+        $title = User::query()->where("username", $username)->first()->name . " Articles";
+
+        return view("front.article-list", compact("articles", "title"));
+    }
+
+    public function search(Request $request)
+    {
+        $searchText = $request->q;
+
+        $articles = Article::query()
+            ->with([
+                'user',
+                'category'
+            ])
+            ->whereHas("user", function($query) use ($searchText){
+                $query->where('name', 'LIKE', '%' . $searchText . '%')
+                    ->orWhere("username", "LIKE", "%" . $searchText . "%")
+                    ->orWhere("about", "LIKE", "%" . $searchText . "%");
+
+            })
+            ->whereHas("category", function($query) use ($searchText){
+                $query->orWhere('name', 'LIKE', '%' . $searchText . '%')
+                    ->orWhere("description", "LIKE", "%" . $searchText . "%")
+                    ->orWhere("slug", "LIKE", "%" . $searchText . "%");
+            })
+            ->orWhere("title", "LIKE", "%" . $searchText . "%")
+            ->orWhere("slug", "LIKE", "%" . $searchText . "%")
+            ->orWhere("body", "LIKE", "%" . $searchText . "%")
+            ->orWhere("tags", "LIKE", "%" . $searchText . "%")
+            ->paginate(30);
+
+        $title = $searchText . " Arama Sonucu";
+        return view("front.article-list", compact(  "articles", 'title'));
     }
 
 }
