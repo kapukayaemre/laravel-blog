@@ -4,6 +4,7 @@ namespace App\Http;
 
 use App\Http\Middleware\IsAdminMiddleware;
 use App\Http\Middleware\Language;
+use App\Http\Middleware\VisitedArticleMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -68,5 +69,6 @@ class Kernel extends HttpKernel
         'verified'         => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'language'         => Language::class,
         'isAdmin'          => IsAdminMiddleware::class,
+        'visitedArticle'   => VisitedArticleMiddleware::class,
     ];
 }
