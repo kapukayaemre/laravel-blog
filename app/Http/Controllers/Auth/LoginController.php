@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserStoreRequest;
@@ -129,16 +130,19 @@ class LoginController extends Controller
         $user->status = 0;
         $user->save();
 
-        $token = Str::random("60");
+        event(new UserRegistered($user));
+
+        /* ? Eventa taşındı
+         *  $token = Str::random("60");
         UserVerify::create([
            "user_id" => $user->id,
            "token" => $token
         ]);
 
-        Mail::send("email.verify", compact("token", "user"), function ($mail) use ($user) {
+        Mail::send("email.verify", compact("token"), function ($mail) use ($user) {
             $mail->to($user->email);
             $mail->subject("Verify User");
-        });
+        });*/
 
         alert()
             ->success("Success", "Check your mail for verify account")
