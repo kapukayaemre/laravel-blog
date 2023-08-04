@@ -96,6 +96,7 @@ Route::post("admin/login", [LoginController::class, "login"]);
 
 /*** Frontend Routes */
 Route::get('/', [FrontController::class, "home"])->name('home');
+Route::get("articles", [FrontController::class, "articleList"])->name("front.articleList");
 Route::get('/categories/{category:slug}', [FrontController::class, "category"])->name('front.categoryArticles');
 Route::get('/authors/{user:username}', [FrontController::class, "authorArticles"])->name('front.authorArticles');
 Route::get('/@{user:username}/{article:slug}', [FrontController::class, "articleDetail"])->name('front.articleDetail')->middleware("visitedArticle");
