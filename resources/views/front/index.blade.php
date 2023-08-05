@@ -9,7 +9,7 @@
     @if(isset($settings) && $settings->feature_categories_is_active)
         <section class="feature-categories mt-4">
         <div class="row">
-            {{--<div class="col-md-3 p-2"
+            <div class="col-md-3 p-2"
                  data-aos="fade-down-right"
                  data-aos-duration="1000"
                  data-aos-easing="ease-in-out">
@@ -91,7 +91,7 @@
                         Lorem ipsum dolor sit amet.
                     </p>
                 </div>
-            </div>--}}
+            </div>
         </div>
     </section>
     @endif
