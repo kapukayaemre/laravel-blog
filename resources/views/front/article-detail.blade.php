@@ -48,14 +48,8 @@
                         {{ $article->title }}
                     </h1>
                     <div class="d-flex justify-content-center">
-                        @php
-                            $articleImage = $article->image;
-                            if (!file_exists(public_path($articleImage)) || is_null($articleImage))
-                            {
-                                $articleImage = $settings->article_default_image;
-                            }
-                        @endphp
-                        <img src="{{ asset($articleImage) }}" class="img-fluid w-75 rounded">
+                        <img src="{{ imageExist($article->image, $settings->article_default_image) }}"
+                             class="img-fluid w-75 rounded">
                     </div>
                     <div class="text-secondary mt-4">
                         {!! $article->body !!}
@@ -74,7 +68,7 @@
                        data-id="{{ $article->id }}"
                        @if(!is_null($userLike))
                            style="color: red"
-                       @endif
+                        @endif
                     >
                         <span class="material-icons-outlined">favorite</span>
                     </a>
@@ -86,14 +80,8 @@
 
             <div class="article-authors mt-5">
                 <div class="bg-white p-4 d-flex justify-content-between align-items-center shadow-sm">
-                    @php
-                        $authorImage = $article->user->image;
-                        if (!file_exists(public_path($authorImage)) || is_null($authorImage))
-                        {
-                            $authorImage = $settings->default_comment_profile_image;
-                        }
-                    @endphp
-                    <img src="{{ asset($authorImage) }}" alt="" width="75" height="75">
+                    <img src="{{ imageExist($article->user->image, $settings->default_comment_profile_image) }}" alt=""
+                         width="75" height="75">
                     <div class="px-5 me-auto">
                         <h4 class=""><a href="mt-3">{{ $article->user->name }}</a></h4>
                         {!! $article->user->about !!}
@@ -106,17 +94,10 @@
                     <div class="swiper-suggest-article mt-3">
                         <div class="swiper-wrapper">
                             @foreach($suggestArticles as $article)
-                                @php
-                                $image = $article->image;
-                                $articlePublishDate = \Carbon\Carbon::parse($article->publish_date)->format("d-m-Y");
-                                if (!file_exists(public_path($image)) || is_null($image))
-                                {
-                                    $image = $settings->article_default_image;
-                                }
-                                @endphp
                                 <div class="swiper-slide">
                                     <a href="{{ route("front.articleDetail", ["user" => $article->user, "article" => $article->slug]) }}">
-                                        <img src="{{ asset($image) }}" class="img-fluid">
+                                        <img src="{{ imageExist($article->image, $settings->article_default_image) }}"
+                                             class="img-fluid">
                                     </a>
 
                                     <div class="most-popular-body mt-2">
@@ -139,7 +120,7 @@
                                             </h4>
                                         </div>
                                         <div class="most-popular-date">
-                                            <span>{{ $articlePublishDate }}</span> &#x25CF; <span>10 dk</span>
+                                            <span>{{ $article->getFormatPublishDateAttribute() }}</span> &#x25CF; <span>10 dk</span>
                                         </div>
                                     </div>
                                 </div>
@@ -165,10 +146,12 @@
                             <input type="text" class="form-control" placeholder="Your name.." name="name" required>
                         </div>
                         <div class="col-md-6">
-                            <input type="email" class="form-control" placeholder="Email Address.." name="email" required>
+                            <input type="email" class="form-control" placeholder="Email Address.." name="email"
+                                   required>
                         </div>
                         <div class="col-12 mt-3">
-                            <textarea name="comment" id="comment" cols="30" rows="5" class="form-control" placeholder="Your Comment.."></textarea>
+                            <textarea name="comment" id="comment" cols="30" rows="5" class="form-control"
+                                      placeholder="Your Comment.."></textarea>
                         </div>
                         <div class="col-md-4">
                             <button class="btn-response align-items-center d-flex mt-3">
@@ -186,40 +169,31 @@
 
                 @foreach($article->comments as $comment)
                     <div class="article-response-wrapper">
-                        <div class="article-response bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
+                        <div
+                            class="article-response bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
                             <div class="col-md-2 ms-2">
                                 @php
-                                    if ($comment->user)
-                                    {
-                                        $image = $comment->user->image;
-                                        $name = $comment->user->name;
-
-                                        if (!file_exists(public_path($image)))
-                                        {
-                                            $image = $settings->default_comment_profile_image;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $image = $settings->default_comment_profile_image;
-                                        $name = $comment->name;
-                                    }
+                                    $name = $comment->user->name ?? $comment->name;
                                 @endphp
 
-                                <img src="{{ asset($image) }}" alt="" width="75" height="75">
+                                <img
+                                    src="{{ imageExist($comment->user->image, $settings->default_comment_profile_image) }}"
+                                    alt="" width="75" height="75">
                             </div>
                             <div class="col-md-10">
                                 <div class="px-3">
                                     <div class="comment-title-date d-flex justify-content-between">
                                         <h4 class="mt-3"><a href="">{{ $name }}</a></h4>
-                                        <time datetime="{{ \Carbon\Carbon::parse($comment->created_at)->format("d-m-Y") }}">
+                                        <time
+                                            datetime="{{ \Carbon\Carbon::parse($comment->created_at)->format("d-m-Y") }}">
                                             {{ \Carbon\Carbon::parse($comment->created_at)->format("d-m-Y") }}
                                         </time>
                                     </div>
                                     <p class="text-secondary">{{ $comment->comment }}</p>
                                     <div class="text-end d-flex  align-items-center justify-content-between">
                                         <div>
-                                            <a href="javascript:void(0)" class="btn-response btnArticleResponseComment" data-id="{{ $comment->id }}">Answer</a>
+                                            <a href="javascript:void(0)" class="btn-response btnArticleResponseComment"
+                                               data-id="{{ $comment->id }}">Answer</a>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             @php
@@ -230,11 +204,12 @@
                                                data-id="{{ $comment->id }}"
                                                @if($commentLike)
                                                    style="color: red"
-                                               @endif
+                                                @endif
                                             >
                                                 <span class="material-icons">thumb_up</span>
                                             </a>
-                                            <span id="commentLikeCount-{{ $comment->id }}">{{ $comment->like_count }}</span>
+                                            <span
+                                                id="commentLikeCount-{{ $comment->id }}">{{ $comment->like_count }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -244,37 +219,28 @@
                         @if($comment->children)
                             <div class="articles-response-comment-wrapper">
                                 @foreach($comment->children as $child)
-                                    <div class="article-comment bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
+                                    <div
+                                        class="article-comment bg-white p-2 mt-3 d-flex justify-content-between align-items-center shadow-sm">
                                         <div class="col-md-2 ms-2">
                                             @php
-                                                if ($child->user)
-                                                {
-                                                    $childImage = $child->user->image;
-                                                    $childName = $child->user->name;
-
-                                                    if (!file_exists(public_path($childImage)))
-                                                    {
-                                                        $childImage = $settings->default_comment_profile_image;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    $childImage = $settings->default_comment_profile_image;
-                                                    $childName = $child->name;
-                                                }
+                                                $childName = $child->user->name ?? $child->name;
                                             @endphp
-                                            <img src="{{ asset($childImage) }}" alt="" width="75" height="75">
+                                            <img
+                                                src="{{ imageExist($child->user->image, $settings->default_comment_profile_image) }}"
+                                                alt="" width="75" height="75">
                                         </div>
                                         <div class="col-md-10">
                                             <div class="px-3">
                                                 <div class="comment-title-date d-flex justify-content-between">
                                                     <h4 class="mt-3"><a href="">{{ $childName }}</a></h4>
-                                                    <time datetime="{{ \Carbon\Carbon::parse($child->created_at)->format("d-m-Y") }}">
+                                                    <time
+                                                        datetime="{{ \Carbon\Carbon::parse($child->created_at)->format("d-m-Y") }}">
                                                         {{ \Carbon\Carbon::parse($child->created_at)->format("d-m-Y") }}
                                                     </time>
                                                 </div>
                                                 <p class="text-secondary">{{ $child->comment }}</p>
-                                                <div class="text-end d-flex  align-items-center justify-content-between">
+                                                <div
+                                                    class="text-end d-flex  align-items-center justify-content-between">
                                                     <div class="d-flex align-items-center">
                                                         @php
                                                             $commentLikeChild = $child->commentLikes->where("user_id", auth()->id())->where("comment_id", $child->id)->first();
@@ -288,7 +254,8 @@
                                                         >
                                                             <span class="material-icons">thumb_up</span>
                                                         </a>
-                                                        <span id="commentLikeCount-{{ $child->id }}">{{ $child->like_count }}</span>
+                                                        <span
+                                                            id="commentLikeCount-{{ $child->id }}">{{ $child->like_count }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -307,82 +274,74 @@
 @section("js")
     <script>
         $(document).ready(function () {
-            $("#favoriteArticle").click(function ()
-            {
+            $("#favoriteArticle").click(function () {
                 @if(Auth::check())
-                    let articleID = $(this).data("id");
-                    let self = $(this);
+                let articleID = $(this).data("id");
+                let self = $(this);
 
-                    $.ajax({
-                        method: "POST",
-                        url: "{{ route("article.favorite") }}",
-                        data: {
-                            articleID : articleID
-                        },
-                        async: false,
-                        success: function (data){
-                            if(data.process)
-                            {
-                                self.css("color", "red")
-                            }
-                            else
-                            {
-                                self.css("color", "inherit")
-                            }
-
-                            $("#favoriteCount").text(data.like_count)
-                        },
-                        error: function (){
-                            console.log("error comes");
+                $.ajax({
+                    method: "POST",
+                    url: "{{ route("article.favorite") }}",
+                    data: {
+                        articleID: articleID
+                    },
+                    async: false,
+                    success: function (data) {
+                        if (data.process) {
+                            self.css("color", "red")
+                        } else {
+                            self.css("color", "inherit")
                         }
-                    })
+
+                        $("#favoriteCount").text(data.like_count)
+                    },
+                    error: function () {
+                        console.log("error comes");
+                    }
+                })
                 @else
-                    Swal.fire({
-                        icon: "info",
-                        title: "Info",
-                        text: "You need login to for add favorite",
-                        confirmButtonText: "Okay"
-                    })
+                Swal.fire({
+                    icon: "info",
+                    title: "Info",
+                    text: "You need login to for add favorite",
+                    confirmButtonText: "Okay"
+                })
                 @endif
 
             })
 
-            $(".like-comment").click(function ()
-            {
+            $(".like-comment").click(function () {
                 @if(Auth::check())
-                    let commentID = $(this).data("id");
-                    let self = $(this);
+                let commentID = $(this).data("id");
+                let self = $(this);
 
-                    $.ajax({
-                        method: "POST",
-                        url: "{{ route("comment.favorite") }}",
-                        data: {
-                            id : commentID
-                        },
-                        async: false,
-                        success: function (data){
-                            if(data.process)
-                            {
-                                self.css("color", "red")
-                            }
-                            else
-                            {
-                                self.css("color", "inherit")
-                            }
-
-                            $("#commentLikeCount-" + commentID).text(data.like_count)
-                        },
-                        error: function (){
-                            console.log("error comes");
+                $.ajax({
+                    method: "POST",
+                    url: "{{ route("comment.favorite") }}",
+                    data: {
+                        id: commentID
+                    },
+                    async: false,
+                    success: function (data) {
+                        if (data.process) {
+                            self.css("color", "red")
+                        } else {
+                            self.css("color", "inherit")
                         }
-                    })
+
+                        $("#commentLikeCount-" + commentID).text(data.like_count)
+                    },
+                    error: function () {
+                        console.log("error comes");
+                    }
+                })
                 @else
-                    Swal.fire({
-                        icon: "info",
-                        title: "Info",
-                        text: "You need login for like comments",
-                        confirmButtonText: "Okay"
-                    })
+                Swal.fire({
+                    icon: "info",
+                    title: "Info",
+                    text: "You need login for like comments",
+                    confirmButtonText: "Okay"
+                })
                 @endif
 
             })
