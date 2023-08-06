@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::useBootstrapFive();
 
-        View::composer("front.*", function ($view){
+        View::composer(["front.*", "email.*"], function ($view){
             $settings   = Settings::first();
             $categories = Category::query()->where("status", 1)->get();
 

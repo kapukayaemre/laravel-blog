@@ -112,6 +112,13 @@ Route::post("register", [LoginController::class, "register"]);
 Route::get("/login", [LoginController::class, "showLoginUser"])->name("user.login");
 Route::post("/login", [LoginController::class, "loginUser"]);
 
+Route::post("/contact", [LoginController::class, ""])->name("contact");
+
+Route::get("/reset-password", [LoginController::class, "showPasswordReset"])->name("passwordReset");
+Route::post("/reset-password", [LoginController::class, "sendPasswordReset"]);
+Route::get("/reset-password/{token}", [LoginController::class, "showPasswordResetConfirm"])->name("passwordResetToken");
+Route::post("/reset-password/{token}", [LoginController::class, "passwordReset"]);
+
 
 Route::get("/auth/verify/{token}", [LoginController::class, "verify"])->name("verify-token");
 Route::get("/auth/{driver}/callback", [LoginController::class, "socialVerify"])->name("socialVerify");
