@@ -47,6 +47,9 @@ class SettingsController extends Controller
         if ($request->has("article_default_image"))
             $settings->article_default_image = $this->imageUpload($request, "article_default_image", $settings->article_default_image);
 
+        if ($request->has("reset_password_image"))
+            $settings->reset_password_image = $this->imageUpload($request, "reset_password_image", $settings->reset_password_image);
+
         $settings->save();
 
         alert()
@@ -58,7 +61,7 @@ class SettingsController extends Controller
 
     }
 
-    public function imageUpload(Request $request, string $imageName, string $oldImagePath): string
+    public function imageUpload(Request $request, string $imageName, string|null $oldImagePath): string
     {
         $imageFile         = $request->file($imageName);
         $originalName      = $imageFile->getClientOriginalName();

@@ -24,7 +24,8 @@ class SettingsRequest extends FormRequest
         return [
             "logo" => ["image", "mimetypes:image/jpeg,image/jpg,image/png", "max:2048"],
             "category_default_image" => ["image", "mimetypes:image/jpeg,image/jpg,image/png", "max:2048"],
-            "article_default_image" => ["image", "mimetypes:image/jpeg,image/jpg,image/png", "max:2048"]
+            "article_default_image" => ["image", "mimetypes:image/jpeg,image/jpg,image/png", "max:2048"],
+            "reset_password_image" => ["image", "mimetypes:image/jpeg,image/jpg,image/png", "max:2048"]
         ];
     }
 }
