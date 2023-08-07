@@ -36,16 +36,19 @@ class FrontController extends Controller
             return $categoryNames;
         });
 
-        $mostPopularArticles = Article::query()
-                ->with(["user", "category"])
+        $mostPopularArticles  = Cache::remember("most_popular_articles", 3600, function(){
+            return Article::query()
+                ->with("user", "category")
+                ->status(1)
                 ->whereHas("user")
                 ->whereHas("category")
                 ->orderBy("view_count", "DESC")
                 ->limit(6)
                 ->get();
+        });
 
         $lastPublishedArticles = Article::query()
-            ->with(["user", "category"])
+            ->with("user", "category")
             ->whereHas("user")
             ->whereHas("category")
             ->orderBy("publish_date", "DESC")
