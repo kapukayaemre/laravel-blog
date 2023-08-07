@@ -85,7 +85,11 @@
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
                     <th scope="col">IP</th>
-                    <th scope="col">Status</th>
+                    @if(isset($page) && $page == "commentList")
+                        <th scope="col">Status</th>
+                    @else
+                        <th scope="col">Approve Status</th>
+                    @endif
                     <th scope="col">Comment</th>
                     <th scope="col">Create Date</th>
                     <th scope="col">Actions</th>
@@ -107,17 +111,21 @@
                             <td>{{ $comment->email }}</td>
                             <td>{{ $comment->ip }}</td>
                             <td>
-                                @if($comment->status)
-                                    <a href="javascript:void(0)" class="btn btn-success btn-sm btnChangeStatus" data-id="{{ $comment->id }}">Active</a>
+                                @if(isset($page))
+                                    @if($comment->approve_status)
+                                        <a href="javascript:void(0)" class="btn btn-success btn-sm btnChangeStatus" data-id="{{ $comment->id }}">Active</a>
+                                    @else
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-sm btnChangeStatus" data-id="{{ $comment->id }}">Inactive</a>
+                                    @endif
                                 @else
-                                    <a href="javascript:void(0)" class="btn btn-danger btn-sm btnChangeStatus" data-id="{{ $comment->id }}">Inactive</a>
+                                    @if($comment->status)
+                                        <a href="javascript:void(0)" class="btn btn-success btn-sm btnChangeStatus" data-id="{{ $comment->id }}">Active</a>
+                                    @else
+                                        <a href="javascript:void(0)" class="btn btn-danger btn-sm btnChangeStatus" data-id="{{ $comment->id }}">Inactive</a>
+                                    @endif
                                 @endif
                             </td>
                             <td>
-                                <span data-bs-container="body" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      data-bs-title="{{ substr( $comment->comment , 0, 200) }}">
-                                    {{ substr( $comment->comment, 0, 10 ) }}
-                                </span>
                                 <button type="button" class="btn btn-primary lookComment btn-sm p-0 px-2"
                                         data-comment="{{ $comment->comment }}" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal">
@@ -126,7 +134,7 @@
                             </td>
                             <td>{{ \Carbon\Carbon::parse($comment->created_at)->translatedFormat("d F Y H:i:s") }}</td>
                             <td>
-                                <div class="d-flex">
+                                <div class="d-flex actions-{{ $comment->id }}">
                                     <a href="javascript:void(0)"
                                        class="btn btn-danger btn-sm btnDelete"
                                        data-name="{{ $comment->id }}"
@@ -137,7 +145,9 @@
                                         <a href="javascript:void(0)"
                                            class="btn btn-info btn-sm btnRestore"
                                            data-name="{{ $comment->id }}"
-                                           data-id="{{ $comment->id }}">
+                                           data-id="{{ $comment->id }}"
+                                           title="Restore"
+                                        >
                                            <i class="material-icons ms-0">restore</i>
                                         </a>
                                     @endif
@@ -181,8 +191,58 @@
     <script>
         $(document).ready(function ()
         {
+            @if(isset($page) && $page != "commentList")
+                $('.btnChangeStatus').click(function () {
+                let id = $(this).data('id');
+                let self = $(this);
 
-            $('.btnChangeStatus').click(function () {
+                Swal.fire({
+                    icon: "question",
+                    title: 'Do you want to activate this comment?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Change',
+                    denyButtonText: `Don't Change`,
+                    cancelButtonText: "İptal"
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed)
+                    {
+                        $.ajax({
+                            method: "POST",
+                            url: "{{ route("article.pending-approval.change-status") }}",
+                            data: {
+                                id : id,
+                                page: "{{ $page }}"
+                            },
+                            async: false,
+                            success: function (data){
+                                $("#row-" + id).remove();
+
+                                Swal.fire({
+                                    icon:"success",
+                                    title: "Info",
+                                    text: "Approved",
+                                    confirmButtonText: "Okay"
+                                });
+                            },
+                            error: function (){
+                                console.log("hata geldi");
+                            }
+                        })
+                    }
+                    else if (result.isDenied)
+                    {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Info",
+                            text: "Nothing Changed",
+                            confirmButtonText: 'Okay',
+                        });
+                    }
+                })
+            });
+            @else
+                $('.btnChangeStatus').click(function () {
                 let id = $(this).data('id');
                 let self = $(this);
 
@@ -207,15 +267,30 @@
                             success: function (data){
                                 if(data.comment_status)
                                 {
-                                    $("#row-" + id).remove();
-                                }
+                                    self.removeClass("btn-danger");
+                                    self.addClass("btn-success");
+                                    self.text("Active");
 
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Success",
-                                    text: "Comment Accepted",
-                                    confirmButtonText: 'Okay',
-                                });
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Success",
+                                        text: "Comment Accepted",
+                                        confirmButtonText: 'Okay',
+                                    });
+                                }
+                                else
+                                {
+                                    self.removeClass("btn-success");
+                                    self.addClass("btn-danger");
+                                    self.text("Inactive");
+
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Success",
+                                        text: "Comment Rejected",
+                                        confirmButtonText: 'Okay',
+                                    });
+                                }
 
                             },
                             error: function (){
@@ -234,6 +309,7 @@
                     }
                 })
             });
+            @endif
 
             $('.btnDelete').click(function () {
                 let commentID = $(this).data('id');
@@ -256,7 +332,18 @@
                             },
                             async: false,
                             success: function (data){
-                                $('#row-' + commentID).remove();
+                                let aElement = document.createElement("a");
+                                aElement.className="btn btn-primary btn-sm btnRestore";
+                                aElement.setAttribute("data-name",comment);
+                                aElement.setAttribute("data-id",commentID);
+                                aElement.setAttribute("title","Restore");
+                                aElement.href="javascript:void(0)";
+                                let iElement = document.createElement("i");
+                                iElement.className="material-icons ms-0";
+                                iElement.innerText="restore";
+                                aElement.append(iElement);
+                                let actions = document.getElementsByClassName("actions-"+commentID);
+                                actions[0].appendChild(aElement);
 
                                 Swal.fire({
                                     icon: "success",
@@ -283,7 +370,7 @@
 
             });
 
-            $('.btnRestore').click(function () {
+            $(document).on('click','body .btnRestore',function () {
                 let commentID = $(this).data('id');
                 let comment = $(this).data('name');
                 let self = $(this);

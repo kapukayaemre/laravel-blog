@@ -34,7 +34,7 @@
                             placeholder="Password"
                             name="username"
                             id="username"
-                            value="{{ isset($user) ? $user->username : "" }}"
+                            value="{{ isset($user) ? $user->username : old("username") }}"
                             required
                         >
 
@@ -65,7 +65,7 @@
                             placeholder="User Name and Surname"
                             name="name"
                             id="name"
-                            value="{{ isset($user) ? $user->name : "" }}"
+                            value="{{ isset($user) ? $user->name : old("name") }}"
                         >
 
                         <label for="email" class="form-label">Email</label>
@@ -75,36 +75,40 @@
                             placeholder="Email"
                             name="email"
                             id="email"
-                            value="{{ isset($user) ? $user->email : "" }}"
+                            value="{{ isset($user) ? $user->email : old("email") }}"
                         >
 
                         <label for="about" class="form-label">About</label>
-                        <textarea name="about" id="about" class="m-b-sm">{!! isset($user) ? $user->about : "" !!}</textarea>
+                        <textarea name="about" id="about" class="m-b-sm">{!! isset($user) ? $user->about : old("about") !!}</textarea>
 
                         <div class="row mt-4 m-b-sm">
                             <div class="col-8">
                                 <label for="image" class="form-label">User Image</label>
                                 <select name="image" id="image" class="form-control form-control-solid-bordered">
                                     <option value="{{ null }}">Choose Image</option>
-                                    <option value="/assets/admin/images/user-images/profile1.png">Profile 1</option>
-                                    <option value="/assets/admin/images/user-images/profile2.png">Profile 2</option>
+                                    <option value="/assets/admin/images/user-images/profile1.png" {{ isset($user) && $user->image == "/assets/admin/images/user-images/profile1.png" ? "selected" : (old("image") == "/assets/admin/images/user-images/profile1.png" ? "selected" : "") }}>
+                                        Profile 1
+                                    </option>
+                                    <option value="/assets/admin/images/user-images/profile2.png" {{ isset($user) && $user->image == "/assets/admin/images/user-images/profile2.png" ? "selected" : (old("image") == "/assets/admin/images/user-images/profile2.png" ? "selected" : "") }}>
+                                        Profile 2
+                                    </option>
                                 </select>
                             </div>
 
                             <div class="col-2 offset-1">
-                                <img src="{{ isset($user) ? asset($user->image) : "" }}" id="image-preview" class="img-fluid m-b-sm" style="max-height: 200px">
+                                <img src="{{ isset($user) ? asset($user->image) : old("image") }}" id="image-preview" class="img-fluid m-b-sm" style="max-height: 200px">
                             </div>
                         </div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="is_admin" value="1" id="is_admin" {{ isset($user) && $user->is_admin ? "checked" : "" }}>
+                            <input class="form-check-input" type="checkbox" name="is_admin" value="1" id="is_admin" {{ isset($user) && $user->is_admin ? "checked" : (old("is_admin") ? "checked" : "") }}>
                             <label class="form-check-label" for="is_admin">
                                 Do you want user role to admin?
                             </label>
                         </div>
 
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="status" value="1" id="status" {{ isset($user) && $user->status ? "checked" : "" }}>
+                            <input class="form-check-input" type="checkbox" name="status" value="1" id="status" {{ isset($user) && $user->status ? "checked" : (old("status") ? "checked" : "") }}>
                             <label class="form-check-label" for="status">
                                 Do you want to user activate?
                             </label>

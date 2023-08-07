@@ -11,6 +11,20 @@ $('#searchIcon1').click(function () {
     $('#search_text').focus();
 });
 
+$(window).scroll(function (){
+    if ($(window).scrollTop() > 150){
+        $(".scroll-to-top").css("display", "block");
+    }
+    else {
+        $(".scroll-to-top").css("display", "none");
+    }
+});
+$(".scroll-to-top").click(function (){
+    $("html,body").animate({
+        scrollTop:$("body").offset().top
+    },50);
+});
+
 
 $(document).ready(function () {
     const swiper = new Swiper('.swiper-most-popular', {
@@ -64,11 +78,5 @@ $(document).ready(function () {
         $('.response-form').toggle();
     });
 
-    $('.btnArticleResponseComment').click(function ()
-    {
-        let commentID = $(this).data("id");
-        $("#comment_parent_id").val(commentID);
-        $('.response-form').toggle();
-    });
 
 });

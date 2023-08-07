@@ -160,5 +160,11 @@
     </section>
 @endsection
 
+@push("meta")
+    <meta name="keywords" content="{{ $settings->seo_keywords_home }}">
+    <meta name="description" content="{{ $settings->seo_description_home }}">
+    <meta name="author" content="Emre Kapukaya">
+@endpush
+
 @section("js")
 @endsection

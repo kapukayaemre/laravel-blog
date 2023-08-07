@@ -14,6 +14,7 @@
             </h2>
         </div>
 
+
         @foreach($articles as $item)
             @php
                 $image = $item->image;
@@ -57,12 +58,31 @@
         @endforeach
 
         <hr style="border:1px solid #a9abad;" class="mt-5">
+
+        @if($articles->count() < 1)
+            <div class="alert alert-info">
+                There is no content!
+            </div>
+        @endif
+
         <div class="col-8 mx-auto mt-2">
             {{ $articles->links() }}
         </div>
-
     </section>
 @endsection
+
+@push("meta")
+    @if(Route::is("front.categoryArticles"))
+        <meta name="keywords" content="{{ $category->seo_keywords }}">
+        <meta name="description" content="{{ $category->seo_description }}">
+        <meta name="author" content="{{ $category->user->name }}">
+    @else
+        <meta name="keywords" content="{{ $settings->seo_keywords_articles }}">
+        <meta name="description" content="{{ $settings->seo_description_articles }}">
+        <meta name="author" content="Emre Kapukaya">
+    @endif
+
+@endpush
 
 @section("js")
 @endsection

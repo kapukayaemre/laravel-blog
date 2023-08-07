@@ -32,6 +32,46 @@
                             rows="5"
                         >{!! isset($settings) ? $settings->header_text : "" !!}</textarea>
 
+                        <label for="seo_keywords_home" class="form-label m-t-sm">Homepage Seo Keywords</label>
+                        <textarea
+                            class="form-control form-control-solid-bordered m-b-sm"
+                            name="seo_keywords_home"
+                            id="seo_keywords_home"
+                            cols="30"
+                            rows="5"
+                            placeholder="Homepage Seo Keywords"
+                            style="resize: none">{{ isset($settings) ? $settings->seo_keywords_home : "" }}</textarea>
+
+                        <label for="seo_description_home" class="form-label m-t-sm">Homepage Seo Description</label>
+                        <textarea
+                            class="form-control form-control-solid-bordered m-b-sm"
+                            name="seo_description_home"
+                            id="seo_description_home"
+                            cols="30"
+                            rows="5"
+                            placeholder="Homepage Seo Description"
+                            style="resize: none">{{ isset($settings) ? $settings->seo_description_home : "" }}</textarea>
+
+                        <label for="seo_keywords_articles" class="form-label m-t-sm">Articles Seo Keywords</label>
+                        <textarea
+                            class="form-control form-control-solid-bordered m-b-sm"
+                            name="seo_keywords_articles"
+                            id="seo_keywords_articles"
+                            cols="30"
+                            rows="5"
+                            placeholder="Articles Seo Keywords"
+                            style="resize: none">{{ isset($settings) ? $settings->seo_keywords_articles : "" }}</textarea>
+
+                        <label for="seo_description_articles" class="form-label m-t-sm">Articles Seo Description</label>
+                        <textarea
+                            class="form-control form-control-solid-bordered m-b-sm"
+                            name="seo_description_articles"
+                            id="seo_description_articles"
+                            cols="30"
+                            rows="5"
+                            placeholder="Articles Seo Description"
+                            style="resize: none">{{ isset($settings) ? $settings->seo_description_articles : "" }}</textarea>
+
                         <label for="footer_text" class="form-label mt-3">Footer Text</label>
                         <textarea
                             class="form-control form-control-solid-bordered m-b-sm @if($errors->has('footer_text')) border-danger @endif"

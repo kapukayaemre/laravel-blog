@@ -184,7 +184,7 @@ class FrontController extends Controller
 
     public function articleList()
     {
-        $articles = Article::query()->orderBy("publish_date", "DESC")->paginate(12);
+        $articles = Article::query()->orderBy("publish_date", "DESC")->paginate(6);
 
         return view("front.article-list", compact("articles"));
     }

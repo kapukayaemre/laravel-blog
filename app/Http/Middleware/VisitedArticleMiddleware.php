@@ -23,12 +23,14 @@ class VisitedArticleMiddleware
                 "user.articleLike",
                 "comments"          => function ($query) {
                     $query->where("status", 1)
+                        ->where("approve_status", 1)
                         ->whereNull("parent_id");
                 },
                 "comments.commentLikes",
                 "comments.user",
                 "comments.children" => function ($query) {
-                    $query->where("status", 1);
+                    $query->where("status", 1)
+                        ->where("approve_status", 1);
                 },
                 "comments.children.user",
                 "comments.children.commentLikes"
