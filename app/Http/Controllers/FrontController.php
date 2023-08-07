@@ -9,11 +9,33 @@ use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class FrontController extends Controller
 {
     public function home()
     {
+        $categoryNames = Cache::remember("most_popular_categories", 3600, function(){
+            $mostPopularCategories = Article::query()
+                ->select("id", "category_id")
+                ->with('category:id,name,slug,description,created_at,image,color')
+                ->whereHas("category", function($query){
+                    $query->where("status", 1)
+                        ->where("feature_status", 1);
+                })
+                ->orderBy("view_count", 'DESC')
+                ->groupBy("category_id")
+                ->get();
+
+            $categoryNames = [];
+            $mostPopularCategories->map(function($item) use(&$categoryNames){
+                if (count($categoryNames) < 4)
+                    $categoryNames[] = $item->category;
+            });
+
+            return $categoryNames;
+        });
+
         $mostPopularArticles = Article::query()
                 ->with(["user", "category"])
                 ->whereHas("user")
@@ -30,7 +52,11 @@ class FrontController extends Controller
             ->limit(6)
             ->get();
 
-        return view("front.index", compact("mostPopularArticles", "lastPublishedArticles"));
+        return view("front.index", [
+            'mostPopularCategories' => $categoryNames,
+            "mostPopularArticles" => $mostPopularArticles,
+            "lastPublishedArticles"=> $lastPublishedArticles
+        ]);
     }
 
     public function category(Request $request, string $slug)

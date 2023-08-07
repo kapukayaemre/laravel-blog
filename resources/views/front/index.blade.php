@@ -8,92 +8,35 @@
 @section("container-top")
     @if(isset($settings) && $settings->feature_categories_is_active)
         <section class="feature-categories mt-4">
-        <div class="row">
-            <div class="col-md-3 p-2"
-                 data-aos="fade-down-right"
-                 data-aos-duration="1000"
-                 data-aos-easing="ease-in-out">
-                <div
-                    style="
-                             background: url('https://via.placeholder.com/600x400') no-repeat center center;
-                             background-size: cover;
-                             height: 300px"
-                    class="p-4 position-relative">
-                    <h2 class="text-center text-secondary">Lorem ipsum.</h2>
-                    <p class="" style="text-align: justify">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, necessitatibus?
-                    </p>
-
-                    <p class="position-absolute" style="bottom: 10px; left: 10px; right: 10px; ">
-                        Lorem ipsum dolor sit amet.
-                    </p>
-                </div>
+            <div class="row">
+                @foreach($mostPopularCategories as $category)
+                    <div class="col-6 col-md-3 p-3 most-popular-category-wrapper"
+                         data-aos="fade-down-right"
+                         data-aos-duration="1000"
+                         data-aos-easing="ease-in-out"
+                         onclick="window.location.href='{{ route("front.categoryArticles", ['category' => $category->slug]) }}'"
+                    >
+                        <div class="d-flex justify-content-center align-items-center shadow-sm most-popular-category"
+                             style="
+                             height: 300px;
+                             background-color:{{ $category->color }};
+                             border-radius: 10px;"
+                        >
+                            <div class="w-75">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{imageExist($category->image, $settings->category_default_image) }}"
+                                         class="img-fluid" style="width: 90px"
+                                    >
+                                </div>
+                                <div class="text-center text-secondary mt-3 border-1 border-secondary border-top mt-4 pt-4">
+                                    <h2>{{ $category->name }}</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             </div>
-
-            <div class="col-md-3 p-2"
-                 data-aos="fade-down-right"
-                 data-aos-duration="1000"
-                 data-aos-easing="ease-in-out">
-                <div
-                    style="
-                             background: url('https://via.placeholder.com/600x400') no-repeat center center;
-                             background-size: cover;
-                             height: 300px"
-                    class="p-4 position-relative">
-                    <h2 class="text-center text-secondary">Lorem ipsum.</h2>
-                    <p class="" style="text-align: justify">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, necessitatibus?
-                    </p>
-
-                    <p class="position-absolute" style="bottom: 10px; left: 10px; right: 10px; ">
-                        Lorem ipsum dolor sit amet.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-3 p-2"
-                 data-aos="fade-down-left"
-                 data-aos-duration="1000"
-                 data-aos-easing="ease-in-out">
-                <div
-                    style="
-                             background: url('https://via.placeholder.com/600x400') no-repeat center center;
-                             background-size: cover;
-                             height: 300px"
-                    class="p-4 position-relative">
-                    <h2 class="text-center text-secondary">Lorem ipsum.</h2>
-                    <p class="" style="text-align: justify">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, necessitatibus?
-                    </p>
-
-                    <p class="position-absolute" style="bottom: 10px; left: 10px; right: 10px; ">
-                        Lorem ipsum dolor sit amet.
-                    </p>
-                </div>
-            </div>
-
-            <div class="col-md-3 p-2"
-                 data-aos="fade-down-left"
-                 data-aos-duration="1000"
-                 data-aos-easing="ease-in-out">
-                <div
-                    style="
-                             background: url('https://via.placeholder.com/600x400') no-repeat center center;
-                             background-size: cover;
-                             height: 300px"
-                    class="p-4 position-relative">
-                    <h2 class="text-center text-secondary">Lorem ipsum.</h2>
-                    <p class="" style="text-align: justify">
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab, necessitatibus?
-                    </p>
-
-                    <p class="position-absolute" style="bottom: 10px; left: 10px; right: 10px; ">
-                        Lorem ipsum dolor sit amet.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
     @endif
 @endsection
 

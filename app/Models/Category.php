@@ -14,6 +14,13 @@ class Category extends Model
 
     protected $guarded = ["id", "created_at", "updated_at"];
 
+    protected $casts = ['created_at' => 'datetime'];
+
+    public function getCreatedAtAttribute($value): string
+    {
+        return date("Y-m-d H:i", strtotime($value));
+    }
+
     public function scopeName($query, $name)
     {
         if (!is_null($name))
