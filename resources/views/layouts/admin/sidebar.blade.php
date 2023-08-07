@@ -1,6 +1,6 @@
 <div class="app-sidebar">
     <div class="logo">
-        <a href="index.html" class="logo-icon"><span class="logo-text">Neptune</span></a>
+        <a href="{{ route("admin.index") }}" class="logo-icon"><span class="logo-text">Neptune</span></a>
         <div class="sidebar-user-switcher user-activity-online">
             <a href="#">
                 <img src="{{ asset("assets/admin/images/avatars/avatar.png") }}">
@@ -80,6 +80,13 @@
                 <a href="{{ route('settings') }}" class="{{ Route::is("settings") ? "active" : "" }}">
                     <i class="material-icons-two-tone">settings</i>
                     Settings
+                </a>
+            </li>
+
+            <li class="{{ Route::is('dbLogs') ? "active-page" : "" }}">
+                <a href="{{ route('dbLogs') }}" class="{{ Route::is("settings") ? "active" : "" }}">
+                    <i class="material-icons-two-tone">hub</i>
+                    Logs
                 </a>
             </li>
 

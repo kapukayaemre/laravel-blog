@@ -10,6 +10,7 @@ use App\Http\Requests\UserStoreRequest;
 use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use App\Models\UserVerify;
+use App\Traits\Loggable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
+    use Loggable;
 
     public function showLogin()
     {
@@ -63,6 +65,8 @@ class LoginController extends Controller
         if ($user && \Hash::check($password, $user->password))
         {
             Auth::login($user, $remember);
+
+            $this->log("login", $user->id, $user->toArray(), User::class);
 
             $userIsAdmin = Auth::user()->is_admin;
             if (!$userIsAdmin)
@@ -128,6 +132,7 @@ class LoginController extends Controller
         {
             $isAdmin = Auth::user()->is_admin;
 
+            $this->log("logout", \auth()->id(), \auth()->user()->toArray(), User::class);
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
@@ -156,18 +161,6 @@ class LoginController extends Controller
 
         event(new UserRegistered($user));
 
-        /* ? Eventa taşındı
-         *  $token = Str::random("60");
-        UserVerify::create([
-           "user_id" => $user->id,
-           "token" => $token
-        ]);
-
-        Mail::send("email.verify", compact("token"), function ($mail) use ($user) {
-            $mail->to($user->email);
-            $mail->subject("Verify User");
-        });*/
-
         alert()
             ->success("Success", "Check your mail for verify account")
             ->showConfirmButton("Okay", "#3085d6")
@@ -179,7 +172,7 @@ class LoginController extends Controller
 
     public function verify(Request $request, $token)
     {
-        $verifyQuery = UserVerify::query()->where("token", $token);
+        $verifyQuery = UserVerify::query()->with("user")->where("token", $token);
         $find = $verifyQuery->first();
 
         if (!is_null($find))
@@ -191,6 +184,9 @@ class LoginController extends Controller
                 $user->email_verified_at = now();
                 $user->status = 1;
                 $user->save();
+
+                $this->log("verify user", $user->id, $user->toArray(), User::class);
+
                 $verifyQuery->delete();
                 $message = "Email Verified Successfully";
             }
@@ -225,6 +221,8 @@ class LoginController extends Controller
         if ($userCheck)
         {
             Auth::login($userCheck);
+            $this->log("verify user", \auth()->id(), \auth()->user()->toArray(), User::class);
+
             return redirect()->route("home");
         }
 
@@ -279,6 +277,7 @@ class LoginController extends Controller
         }
 
         Mail::to($find->email)->send(new ResetPasswordMail($find, $token));
+        $this->log("password reset mail sent", $find->id, $find->toArray(), User::class);
 
         alert()
             ->success('Success', "Password reset mail sent")

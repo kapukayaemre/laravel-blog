@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SettingsRequest;
 use App\Models\Settings;
+use App\Traits\Loggable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class SettingsController extends Controller
 {
+    use Loggable;
+
     public function show()
     {
         $settings = Settings::first();
@@ -50,6 +53,7 @@ class SettingsController extends Controller
         if ($request->has("reset_password_image"))
             $settings->reset_password_image = $this->imageUpload($request, "reset_password_image", $settings->reset_password_image);
 
+        $this->updateLog($settings, Settings::class);
         $settings->save();
 
         alert()

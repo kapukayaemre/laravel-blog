@@ -78,7 +78,7 @@
 
                     <div class="col-6 d-flex mx-auto mb-2 text-center">
                         <button type="submit" class="btn btn-primary w-50 mx-2">Filter</button>
-                        <button type="submit" class="btn btn-warning w-50">Clear Filter</button>
+                        <button type="submit" class="btn btn-warning w-50" id="btnClearFilter">Clear Filter</button>
                     </div>
                     <hr>
                 </div>

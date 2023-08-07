@@ -4,7 +4,11 @@ namespace App\Providers;
 
 use App\Events\UserRegistered;
 use App\Listeners\SendVerifyEmail;
+use App\Models\Article;
+use App\Models\Category;
 use App\Models\User;
+use App\Observers\ArticleObserver;
+use App\Observers\CategoryObserver;
 use App\Observers\UserRegisteredObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -31,7 +35,9 @@ class EventServiceProvider extends ServiceProvider
 
     /*** Send mail with observers */
     protected $observers = [
-        User::class => UserRegisteredObserver::class
+        User::class     => UserRegisteredObserver::class,
+        Category::class => CategoryObserver::class,
+        Article::class  => ArticleObserver::class
     ];
 
     /**

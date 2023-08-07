@@ -14,8 +14,6 @@ class FrontController extends Controller
 {
     public function home()
     {
-        \Log::info("testing log-viewer");
-
         $mostPopularArticles = Article::query()
                 ->with(["user", "category"])
                 ->whereHas("user")

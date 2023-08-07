@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\UserLikeArticle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -153,56 +154,100 @@ class ArticleController extends Controller
 
     public function update(ArticleUpdateRequest $request)
     {
+        $articleQuery = Article::query()
+            ->where("id", $request->id);
+
+        $articleFind = $articleQuery->first();
+
         $data = $request->except("_token");
-        $slug = $data["slug"] ?? $data["title"];
+
+
+        $slug = $articleFind->title != $data['title'] ? $data['title'] : ($data['slug'] ?? $data["title"]);
         $slug = Str::slug($slug);
         $slugTitle = Str::slug($data["title"]);
 
-        $checkSlug = $this->slugCheck($slug);
 
-        /*? Check if slug used */
-        if (!is_null($checkSlug))
+        if ($articleFind->slug != $slug)
         {
-            $checkTitleSlug = $this->slugCheck($slugTitle);
-            if (!is_null($checkTitleSlug))
+            $checkSlug = $this->slugCheck($slug);
+
+            if (!is_null($checkSlug))
             {
-                /*? if 2 condition didn't return null create new unique slug*/
-                $slug = Str::slug($slug. time());
+                $checkTitleSlug = $this->slugCheck($slugTitle);
+                if (!is_null($checkTitleSlug))
+                {
+                    $slug = Str::slug($slug . time());
+                }
+                else
+                {
+                    $slug = $slugTitle;
+                }
             }
-            else
+
+            $data["slug"] = $slug;
+        }
+        else
+//            if (empty($data['slug']) && !is_null($articleFind->slug))
+        {
+            unset($data['slug']);
+        }
+//        else
+//        {
+//            unset($data['slug']);
+//        }
+
+
+
+        if ($articleFind->title != $data['title'] || (isset($data['slug']) && $articleFind->slug != $data['slug'] ))
+        {
+            if (Cache::has("most_popular_articles"))
             {
-                $slug = $slugTitle;
+                $mpA = Cache::get("most_popular_articles");
+                $mpA->where("title", $articleFind->title)->first()->update([
+                    'title' =>  $data['title'],
+                    'slug' => $slug
+                ]);
+                Cache::put("most_popular_articles", $mpA, 3600);
             }
+            //            Cache::forget("most_popular_articles");
         }
 
-        $data["slug"] = $slug;
 
-        if ($request->has("image"))
+
+        if (!is_null($request->image))
         {
             $imageFile = $request->file("image");
             $originalName = $imageFile->getClientOriginalName();
             $originalExtension = $imageFile->getClientOriginalExtension();
             $explodeName = explode(".", $originalName)[0];
-            $fileName = Str::slug($explodeName). ".". $originalExtension;
+            $fileName = Str::slug($explodeName) . "." . $originalExtension;
 
             $folder = "articles";
-            $publicPath = "storage/".$folder;
+            $publicPath = "storage/" . $folder;
 
-            if (file_exists(public_path($publicPath. $fileName)))
+            if (file_exists(public_path($publicPath . $fileName)))
             {
-                return redirect()->back()->withErrors([
-                    'image' => 'Same picture already uploaded'
-                ]);
+                return redirect()
+                    ->back()
+                    ->withErrors([
+                        'image' => "Same picture already upload"
+                    ]);
             }
 
-            $data["image"] = $publicPath. "/" .$fileName;
+            $data["image"] = $publicPath . "/" . $fileName;
+
         }
-
         $data["user_id"] = auth()->id();
+        $status = 0;
+        if (isset($data['status']))
+        {
+            $status = 1;
+        }
+        $data['status'] = $status;
 
-        $articleQuery = Article::query()->where("id", $request->id);
-        $articleFind = $articleQuery->first();
-        $articleQuery->update($data);
+
+        $articleQuery->first()->update($data);
+
 
         if (!is_null($request->image))
         {
@@ -210,11 +255,11 @@ class ArticleController extends Controller
             {
                 \File::delete(public_path($articleFind->image));
             }
-            $imageFile->storeAs($folder, $fileName, "public");
+            $imageFile->storeAs($folder,  $fileName, "public");
         }
 
         alert()
-            ->success('Success', "Article updated successfully")
+            ->success('Success', "Article Updated Successfully")
             ->showConfirmButton('Okay', '#3085d6')
             ->autoClose(5000);
 

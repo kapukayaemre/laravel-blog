@@ -31,7 +31,7 @@
         </x-slot:header>
 
         <x-slot:body>
-            <form action="{{ $page === "comment-list" ? route("article.comment-list") : route("article.pending-approval") }}" method="GET">
+            <form action="{{ $page === "comment-list" ? route("article.comment-list") : route("article.pending-approval") }}" method="GET" id="formFilter">
                 <div class="row">
                     <div class="col-3 my-1">
                         <select class="form-select" name="user_id">
@@ -69,7 +69,7 @@
                     <hr>
                     <div class="col-6 mb-2 d-flex">
                         <button class="btn btn-primary w-50 me-4" type="submit">Filter</button>
-                        <button class="btn btn-warning w-50" type="button">Clean Filter</button>
+                        <button class="btn btn-warning w-50" type="button" id="btnClearFilter">Clean Filter</button>
                     </div>
                     <hr>
                 </div>
