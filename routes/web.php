@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ArticleCommentController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -34,9 +35,7 @@ Route::prefix("admin")->middleware(['auth','verified'])->group(function () {
         Route::get("logs-db/{id}", [LogController::class, "getLog"])->name("dblogs.getLog")->whereNumber("id");
 
         /*** Dashboard */
-        Route::get('/', function () {
-            return view('admin.index');
-        })->name('admin.index');
+        Route::get('/', [AdminController::class, "index"])->name('admin.index');
 
 
         /*** Article Routes */

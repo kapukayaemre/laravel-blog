@@ -127,7 +127,7 @@
 
             <div class="col-md-3">
                 <section class="categories bg-white shadow-sm">
-                    <h4 class="bg-light text-secondary p-3 border-bottom border-1 border-light m-0">Kategoriler</h4>
+                    <h4 class="bg-light text-secondary p-3 border-bottom border-1 border-light m-0">Categories</h4>
                     <ul class="list-group m-0" id="categoryCollapse">
                         @foreach($categories as $category)
                             @if($category->childCategories->count())

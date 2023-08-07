@@ -151,6 +151,7 @@
                             </a>
                         </h4>
                     </div>
+
                     <div class="most-popular-date">
                         <span>{{ $article->getFormatPublishDateAttribute() }}</span> &#x25CF; <span>10 dk</span>
                     </div>
