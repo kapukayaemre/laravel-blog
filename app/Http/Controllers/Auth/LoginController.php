@@ -277,7 +277,7 @@ class LoginController extends Controller
         }
 
         Mail::to($find->email)->send(new ResetPasswordMail($find, $token));
-        $this->log("password reset mail sent", $find->id, $find->toArray(), User::class);
+        $this->log("password reset mail send", $find->id, $find->toArray(), User::class, true);
 
         alert()
             ->success('Success', "Password reset mail sent")
