@@ -88,4 +88,20 @@ $(document).ready(function(){
             lfm: LFMButton
         }
     })
+
+    $('#custom_content').summernote({
+        height: 200,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'lfm']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+        ],
+        buttons: {
+            lfm: LFMButton
+        }
+    })
 });

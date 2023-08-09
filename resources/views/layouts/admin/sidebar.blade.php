@@ -83,6 +83,28 @@
                 </a>
             </li>
 
+            <li class="{{ Route::is("admin.email-themes.*") ? "open" : "" }}">
+                <a href="#" class="">
+                    <i class="material-icons-two-tone">mail</i>
+                    Email Management
+                    <i class="material-icons has-sub-menu">keyboard_arrow_right</i>
+                </a>
+                <ul class="sub-menu" style="">
+                    <li>
+                        <a href="{{ route("admin.email-themes.create") }}" class="{{ Route::is("admin.email-themes.create") ? "active" : "" }}">New Theme</a>
+                    </li>
+                    <li>
+                        <a href="{{ route("admin.email-themes.index") }}" class="{{ Route::is("admin.email-themes.index") ? "active" : "" }}">Themes</a>
+                    </li>
+                    <li>
+                        <a href="{{ route("admin.email-themes.assign") }}" class="{{ Route::is("admin.email-themes.assign") ? "active" : "" }}">Theme Assignment/Choose</a>
+                    </li>
+                    <li>
+                        <a href="{{ route("admin.email-themes.assign-list") }}" class="{{ Route::is("admin.email-themes.assign-list") ? "active" : "" }}">Theme Assigned List</a>
+                    </li>
+                </ul>
+            </li>
+
             <li class="{{ Route::is('dbLogs') ? "active-page" : "" }}">
                 <a href="{{ route('dbLogs') }}" class="{{ Route::is("settings") ? "active" : "" }}">
                     <i class="material-icons-two-tone">hub</i>
